@@ -24,11 +24,35 @@ namespace SchematicsProject
         private IDictionary<string, Object> prompts = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> enums = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> types = new ExpandoObject() as IDictionary<string, Object>;
+        string CurrentPath = "";
+        string CurrentDirectory = "";
+
+        public IConfiguration Configuration { get; set; }
+
+        public Engine(IConfiguration configuration)
+        {
+            this.Configuration = configuration;
+            if (Configuration.GetSection("Env").Value == "Publish")
+            {
+                
+                CurrentPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                CurrentDirectory = Directory.GetCurrentDirectory();
+            }
+            else if (Configuration.GetSection("Env").Value == "Debug")
+            {
+                var enviroment = System.Environment.CurrentDirectory;
+                CurrentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
+                CurrentDirectory = CurrentPath;
+            }
+        }
 
 
 
         public async Task Input(string input)
         {
+            string a = Configuration.GetSection("Name").Value;
+            Console.WriteLine(a);
+
             input = Regex.Replace(input, @"\s+", " ");   
 
             var command = input.Split(" ");
@@ -40,12 +64,7 @@ namespace SchematicsProject
             if (command[0] != "-t")
                 throw new ArgumentException("invalid input"); 
 
-            var enviroment = System.Environment.CurrentDirectory;
-            //string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
-
-            string currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
-
-            string path = Path.Combine(currentPath, "collection.json");
+            string path = Path.Combine(CurrentPath, "collection.json");
 
 
             JObject data = JObject.Parse(File.ReadAllText(path));
@@ -61,7 +80,7 @@ namespace SchematicsProject
             JArray required = null;
             ArrayList required2 = new ArrayList();
 
-            path = Path.Combine(currentPath, component["schema"].ToString());
+            path = Path.Combine(CurrentPath, component["schema"].ToString());
             JObject schema = JObject.Parse(File.ReadAllText(path)); //getting json for wanted object
             var dictionary = schema.ToObject<Dictionary<string, Object>>();
             required = dictionary["required"] as JArray;
@@ -117,16 +136,16 @@ namespace SchematicsProject
 
             ClassHelper(command[1]);
 
-            var dirFile = currentPath + templatePath + "/";
+            var dirFile = CurrentPath + templatePath + "/";
             
 
             foreach (string fileName in GetFiles(dirFile))
             {
-                var templateName = fileName.Replace(currentPath + templatePath + "/", "");
+                var templateName = fileName.Replace(CurrentPath + templatePath + "/", "");
                 templateName = templateName.Replace(@"\", "/");
                 
                 //templateName = templateName.Split('/').Last();
-                templateName = templateName.Replace(currentPath + templatePath + "/", "");
+                templateName = templateName.Replace(CurrentPath + templatePath + "/", "");
                 string pattern = @"__(.*?)__";
                 Regex regex = new Regex(pattern);
                 foreach (Match match in Regex.Matches(templateName, pattern))
@@ -141,7 +160,7 @@ namespace SchematicsProject
             }
         }
 
-        static IEnumerable<string> GetFiles(string path)
+        public IEnumerable<string> GetFiles(string path)
         {
             var firstPath = path;
             Queue<string> queue = new Queue<string>();
@@ -156,10 +175,7 @@ namespace SchematicsProject
                     {
                         
                         var directoryInsideTemplates = subDir.Replace(firstPath, "");
-                        var currentDirectory = Directory.GetCurrentDirectory();
-                        /*var enviroment = System.Environment.CurrentDirectory;
-                        var currentDirectory = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");*/
-                        var placeToCreateDirectory = currentDirectory + "/" + directoryInsideTemplates;
+                        var placeToCreateDirectory = CurrentDirectory + "/" + directoryInsideTemplates;
                         System.IO.Directory.CreateDirectory(placeToCreateDirectory);
 
                         queue.Enqueue(subDir + "/");
@@ -251,11 +267,7 @@ namespace SchematicsProject
 
         public async void Generate(string templatePath, string outputFileName)
         {
-            string currentPath = Directory.GetCurrentDirectory();
-            
-            var enviroment = System.Environment.CurrentDirectory;
-            //string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
-            string path = currentPath + "/";
+            string path = CurrentDirectory + "/";
             var engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
                   .UseEmbeddedResourcesProject(typeof(Component))

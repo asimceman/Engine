@@ -94,8 +94,6 @@ C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netco
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.Configuration.KeyPerFile.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.Configuration.UserSecrets.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.Configuration.Xml.dll
-C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.Diagnostics.HealthChecks.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\refs\Microsoft.Extensions.FileProviders.Abstractions.dll
@@ -331,3 +329,6 @@ C:\Users\User\source\repos\SchematicsProject\SchematicsProject\obj\Release\netco
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\obj\Release\netcoreapp3.1\SchematicsProject.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\obj\Release\netcoreapp3.1\SchematicsProject.pdb
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\obj\Release\netcoreapp3.1\SchematicsProject.genruntimeconfig.cache
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\appsettings.json
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
