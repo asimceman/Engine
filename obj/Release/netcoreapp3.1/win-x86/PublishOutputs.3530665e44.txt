@@ -1,10 +1,10 @@
 C:\Users\User\source\repos\Publishment\SchematicsProject.exe
 C:\Users\User\source\repos\Publishment\component\Component.cs
-C:\Users\User\source\repos\Publishment\component\Files\Pesme moje\PesmeMoje.html.template
-C:\Users\User\source\repos\Publishment\component\Files\PesmeTvoje\__name__.component.__style__.template
-C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\dotakoSamDnoZivota.html.template
-C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__name__.Danka.html.template
-C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__service__Service.Danka.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Folder1\__service__.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Folder2\__name__.component.__style__.template
+C:\Users\User\source\repos\Publishment\component\Files\Folder3\Folder4\Folder5\__name__.Codecta.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Folder3\Folder4\Folder5\__service__Service.Codecta.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Folder3\Folder4\Halid.html.template
 C:\Users\User\source\repos\Publishment\component\Files\__name__.component.__style__.template
 C:\Users\User\source\repos\Publishment\component\Files\__name__.html.template
 C:\Users\User\source\repos\Publishment\component\Files\__name__.ts.template

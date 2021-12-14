@@ -23,7 +23,7 @@
 	</Content>
 	<None Remove="component-list\Files\Folder1\Folder2\__name__.component.__style__.template" />
 	<None Remove="component-list\Files\PesmeTvoje\__name__.component.__style__.template" />
-	<None Remove="component\Files\PesmeTvoje\__name__.component.__style__.template" />
+	<None Remove="component\Files\Folder2\__name__.component.__style__.template" />
 	<Content Include="appsettings.json">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>

@@ -26,6 +26,7 @@ namespace SchematicsProject
         private IDictionary<string, Object> Types = new ExpandoObject() as IDictionary<string, Object>;
         string CurrentPath = "";
         string CurrentDirectory = "";
+        string TemplatePath = "";
 
         public IConfiguration Configuration { get; set; }
 
@@ -34,7 +35,6 @@ namespace SchematicsProject
             this.Configuration = Configuration;
             if (this.Configuration.GetSection("Env").Value == "Publish")
             {
-
                 CurrentPath = System.AppDomain.CurrentDomain.BaseDirectory;
                 CurrentDirectory = Directory.GetCurrentDirectory();
             }
@@ -46,56 +46,93 @@ namespace SchematicsProject
             }
         }
 
-
-
-        public async Task Input(string Input)
+        public async Task InputProcces(string Input)
         {
-
             Input = Regex.Replace(Input, @"\s+", " ");   
-
             var Command = Input.Split(" ");
+
+            InputValidation(Command);
+
+            var Schema = getSchema(Command[1]);
+
+            JArray Required = Schema["required"] as JArray;
+            ArrayList RequiredList = new ArrayList(Required.ToObject<ArrayList>());
+
+            InsertModel(Schema);
+            
+            Model["name"] = Command[2];
+            ArrayList InputtedValues = new ArrayList();
+            InputtedValues.Add("name");
+            if (Command.Length > 3)
+            {
+                for (var i = 3; i < Command.Length; i++)
+                {
+                    var CommandSplit = Command[i].Split(":");
+                    Model[CommandSplit[0]] = CommandSplit[1];
+                    InputtedValues.Add(CommandSplit[0]);
+                }
+            }
+
+
+
+            foreach (var Question in Prompts)
+            {
+                if (InputtedValues.Contains(Question.Key))
+                    continue;
+                promptAction(Question, RequiredList);
+            }
+
+            ClassHelper(Command[1]);
+
+            var TemplateDirectory = CurrentPath + TemplatePath + "/";
+
+            GetTemplatesAndGenerate(TemplateDirectory);
+        }
+
+        public void InputValidation(dynamic Command)
+        {
             if (Command.Length < 3)
             {
                 throw new ArgumentException("Invalid input");
             }
 
             if (Command[0] != "-t")
-                throw new ArgumentException("invalid input"); 
+                throw new ArgumentException("invalid input");
+        }
 
+        public Dictionary<string, Object> getSchema(string ComponentToGenerate) {
             string CollectionPath = Path.Combine(CurrentPath, "collection.json");
-
 
             JObject Data = JObject.Parse(File.ReadAllText(CollectionPath));
             var Schematics = Data["schematics"];
-            var Component = Schematics[Command[1]];
+            var Component = Schematics[ComponentToGenerate];
 
             if (Component == null)
             {
                 throw new Exception("Schematics doesn't exist");
             }
-            var FactoryPath = Schematics[Command[1]]["factory"];
-            var TemplatePath = FactoryPath  + "./Files";
-            JArray Required = null;
-            ArrayList Required2 = new ArrayList();
+            var FactoryPath = Schematics[ComponentToGenerate]["factory"];
+            TemplatePath = FactoryPath + "./Files";
 
-            CollectionPath = Path.Combine(CurrentPath, Component["schema"].ToString());
-            JObject Schema = JObject.Parse(File.ReadAllText(CollectionPath)); //getting json for wanted object
-            var Dictionary = Schema.ToObject<Dictionary<string, Object>>();
-            Required = Dictionary["required"] as JArray;
-            Required2 = Required.ToObject<ArrayList>();
-            //var templates = dictionary["templates"];
-            if (Dictionary.ContainsKey("properties"))
+            var SchemaPath = Path.Combine(CurrentPath, Component["schema"].ToString());
+            JObject Schema = JObject.Parse(File.ReadAllText(SchemaPath)); //getting json for wanted object
+            return Schema.ToObject<Dictionary<string, Object>>();
+        }
+
+        public void InsertModel(dynamic Schema)
+        {
+            if (Schema.ContainsKey("properties"))
             {
-                var Properties = Dictionary["properties"];
+                var Properties = Schema["properties"];
                 foreach (JProperty Property in (JToken)Properties)
                 {
                     var Field = Property.Path;
                     if (Property.Value["type"].ToString() == "boolean")
                     {
-                        bool Def = false;
+                        bool BoolValue = false;
                         if (Property.Value["default"].ToString() == "True")
-                            Def = true;
-                        Model.Add(Field, Def);
+                            BoolValue = true;
+                        Model.Add(Field, BoolValue);
                     }
                     else
                     {
@@ -106,44 +143,15 @@ namespace SchematicsProject
                     Types.Add(Field, Property.Value["type"]);
                 }
             }
-            
-            Model["name"] = Command[2];
-            ArrayList InputtedValues = new ArrayList();
-            InputtedValues.Add("name");
-            if (Command.Length > 3)
+        }
+
+        public void GetTemplatesAndGenerate(string TemplateDirectory)
+        {
+            foreach (string TemplateFile in GetFiles(TemplateDirectory))
             {
-                for (var i = 3; i < Command.Length; i++)
-                {
-                    var Command2 = Command[i].Split(":");
-                    var firstPart = Command2[0];
-                    var secondPart = Command2[1];
-                    Model[firstPart] = secondPart;
-                    InputtedValues.Add(firstPart);
-
-                }
-            }
-
-
-
-            foreach (var Question in Prompts)
-            {
-                if (InputtedValues.Contains(Question.Key))
-                    continue;
-                Model = promptAction(Question, Required2);
-            }
-
-            ClassHelper(Command[1]);
-
-            var DirFile = CurrentPath + TemplatePath + "/";
-            
-
-            foreach (string FileName in GetFiles(DirFile))
-            {
-                var TemplateName = FileName.Replace(CurrentPath + TemplatePath + "/", "");
+                var TemplateName = TemplateFile.Replace(CurrentPath + TemplatePath + "/", "");
                 TemplateName = TemplateName.Replace(@"\", "/");
-                
-                //templateName = templateName.Split('/').Last();
-                TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
+                //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
                 string Pattern = @"__(.*?)__";
                 Regex Regex = new Regex(Pattern);
                 foreach (Match match in Regex.Matches(TemplateName, Pattern))
@@ -154,7 +162,7 @@ namespace SchematicsProject
                 int Index = TemplateName.LastIndexOf(".");
                 if (Index >= 0)
                     TemplateName = TemplateName.Substring(0, Index);
-                Generate(FileName, TemplateName);
+                Generate(TemplateFile, TemplateName);
             }
         }
 
@@ -166,12 +174,10 @@ namespace SchematicsProject
             while (Queue.Count > 0)
             {
                 Path = Queue.Dequeue();
-                //Console.WriteLine("Path " + path);
                 try
                 {
                     foreach (string SubDir in Directory.GetDirectories(Path))
                     {
-                        
                         var DirectoryInsideTemplates = SubDir.Replace(InitialPath, "");
                         var PlaceToCreateDirectory = CurrentDirectory + "/" + DirectoryInsideTemplates;
                         System.IO.Directory.CreateDirectory(PlaceToCreateDirectory);
@@ -216,7 +222,7 @@ namespace SchematicsProject
             }
         }
 
-        public dynamic promptAction(dynamic Question, dynamic Required)
+        public void promptAction(dynamic Question, dynamic Required)
         {
             if (Question.Value != null)
             {
@@ -231,12 +237,9 @@ namespace SchematicsProject
                     {
                         Options.Add(Option.ToString());
                     }
-
-
                     Menu Menu = new Menu(Options.ToArray());
                     int SelectedIndex = Menu.Run();
                     Model[Question.Key] = Options[SelectedIndex];
-
                 }
 
                 else if (Types[Question.Key].ToString() == "boolean")
@@ -262,10 +265,9 @@ namespace SchematicsProject
                 }
                 Console.WriteLine("");
             }
-            return Model;
         }
 
-        public async void Generate(string templatePath, string OutputFileName)
+        public async void Generate(string TemplateFile, string OutputFileName)
         {
             string DestinationPath = CurrentDirectory + "/";
             var Engine = new RazorLightEngineBuilder()
@@ -277,7 +279,7 @@ namespace SchematicsProject
             string Template = "";
             try
             {
-                Template = File.ReadAllText(templatePath);
+                Template = File.ReadAllText(TemplateFile);
             }
             catch (Exception e)
             {
@@ -286,11 +288,6 @@ namespace SchematicsProject
 
             string Result = await Engine.CompileRenderStringAsync("templateKey2", Template, Model);
             
-
-            //string outputName = model["name"].ToString() + "." + language;
-
-            
-
             using (StreamWriter OutputFile = new StreamWriter(System.IO.Path.Combine(DestinationPath, OutputFileName)))
             {
                 await OutputFile.WriteAsync(Result);

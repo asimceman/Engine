@@ -22,9 +22,7 @@ namespace SchematicsProject
             if (!First)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - Options.Length);
-
             }
-
 
             for (int i = 0; i < Options.Length; i++)
             {
@@ -44,21 +42,17 @@ namespace SchematicsProject
                     Prefix = "";
                 }
                 Console.WriteLine($"{Prefix}{CurrentOption}");
-
             }
             First = false;
-
         }
 
         public static void ClearCurrentConsoleLine()
         {
-
             int CurrentLineCursor = Console.CursorTop;
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = 0; i < Console.WindowWidth; i++)
                 Console.Write(" ");
             Console.SetCursorPosition(0, CurrentLineCursor);
-
         }
 
 
@@ -86,6 +80,5 @@ namespace SchematicsProject
             while (KeyPressed != ConsoleKey.Enter);
             return SelectedIndex;
         }
-
     }
 }
