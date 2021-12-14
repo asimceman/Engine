@@ -48,7 +48,7 @@ namespace SchematicsProject.component_list
                     tip.TryAdd("filterType", filterType);
                     tip.TryAdd("size", size);
                     //Object filterinjo = new Object({ filter.ToString() = tip; });
-                    filters.Add(new Filter { Name = filter, filter = tip });
+                    filters.Add(new Filter { Name = filter, FilterObject = tip });
                 }
             }
             while (filter != "");

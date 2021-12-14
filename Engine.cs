@@ -20,281 +20,281 @@ namespace SchematicsProject
 
     public class Engine
     {
-        private IDictionary<string, Object> model = new ExpandoObject() as IDictionary<string, Object>;
-        private IDictionary<string, Object> prompts = new ExpandoObject() as IDictionary<string, Object>;
-        private IDictionary<string, Object> enums = new ExpandoObject() as IDictionary<string, Object>;
-        private IDictionary<string, Object> types = new ExpandoObject() as IDictionary<string, Object>;
+        private IDictionary<string, Object> Model = new ExpandoObject() as IDictionary<string, Object>;
+        private IDictionary<string, Object> Prompts = new ExpandoObject() as IDictionary<string, Object>;
+        private IDictionary<string, Object> Enums = new ExpandoObject() as IDictionary<string, Object>;
+        private IDictionary<string, Object> Types = new ExpandoObject() as IDictionary<string, Object>;
         string CurrentPath = "";
         string CurrentDirectory = "";
 
         public IConfiguration Configuration { get; set; }
 
-        public Engine(IConfiguration configuration)
+        public Engine(IConfiguration Configuration)
         {
-            this.Configuration = configuration;
-            if (Configuration.GetSection("Env").Value == "Publish")
+            this.Configuration = Configuration;
+            if (this.Configuration.GetSection("Env").Value == "Publish")
             {
-                
+
                 CurrentPath = System.AppDomain.CurrentDomain.BaseDirectory;
                 CurrentDirectory = Directory.GetCurrentDirectory();
             }
-            else if (Configuration.GetSection("Env").Value == "Debug")
+            else if (this.Configuration.GetSection("Env").Value == "Debug")
             {
-                var enviroment = System.Environment.CurrentDirectory;
-                CurrentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
+                var Environment = System.Environment.CurrentDirectory;
+                CurrentPath = Directory.GetParent(Environment).Parent.FullName.Replace("\\bin", "");
                 CurrentDirectory = CurrentPath;
             }
         }
 
 
 
-        public async Task Input(string input)
+        public async Task Input(string Input)
         {
-            string a = Configuration.GetSection("Name").Value;
-            Console.WriteLine(a);
 
-            input = Regex.Replace(input, @"\s+", " ");   
+            Input = Regex.Replace(Input, @"\s+", " ");   
 
-            var command = input.Split(" ");
-            if (command.Length < 3)
+            var Command = Input.Split(" ");
+            if (Command.Length < 3)
             {
                 throw new ArgumentException("Invalid input");
             }
 
-            if (command[0] != "-t")
+            if (Command[0] != "-t")
                 throw new ArgumentException("invalid input"); 
 
-            string path = Path.Combine(CurrentPath, "collection.json");
+            string CollectionPath = Path.Combine(CurrentPath, "collection.json");
 
 
-            JObject data = JObject.Parse(File.ReadAllText(path));
-            var schematics = data["schematics"];
-            var component = schematics[command[1]];
+            JObject Data = JObject.Parse(File.ReadAllText(CollectionPath));
+            var Schematics = Data["schematics"];
+            var Component = Schematics[Command[1]];
 
-            if (component == null)
+            if (Component == null)
             {
                 throw new Exception("Schematics doesn't exist");
             }
-            var factoryPath = schematics[command[1]]["factory"];
-            var templatePath = factoryPath  + "./Files";
-            JArray required = null;
-            ArrayList required2 = new ArrayList();
+            var FactoryPath = Schematics[Command[1]]["factory"];
+            var TemplatePath = FactoryPath  + "./Files";
+            JArray Required = null;
+            ArrayList Required2 = new ArrayList();
 
-            path = Path.Combine(CurrentPath, component["schema"].ToString());
-            JObject schema = JObject.Parse(File.ReadAllText(path)); //getting json for wanted object
-            var dictionary = schema.ToObject<Dictionary<string, Object>>();
-            required = dictionary["required"] as JArray;
-            required2 = required.ToObject<ArrayList>();
+            CollectionPath = Path.Combine(CurrentPath, Component["schema"].ToString());
+            JObject Schema = JObject.Parse(File.ReadAllText(CollectionPath)); //getting json for wanted object
+            var Dictionary = Schema.ToObject<Dictionary<string, Object>>();
+            Required = Dictionary["required"] as JArray;
+            Required2 = Required.ToObject<ArrayList>();
             //var templates = dictionary["templates"];
-            if (dictionary.ContainsKey("properties"))
+            if (Dictionary.ContainsKey("properties"))
             {
-                var properties = dictionary["properties"];
-                foreach (JProperty property in (JToken)properties)
+                var Properties = Dictionary["properties"];
+                foreach (JProperty Property in (JToken)Properties)
                 {
-                    var field = property.Path;
-                    if (property.Value["type"].ToString() == "boolean")
+                    var Field = Property.Path;
+                    if (Property.Value["type"].ToString() == "boolean")
                     {
-                        bool def = false;
-                        if (property.Value["default"].ToString() == "True")
-                            def = true;
-                        model.Add(field, def);
+                        bool Def = false;
+                        if (Property.Value["default"].ToString() == "True")
+                            Def = true;
+                        Model.Add(Field, Def);
                     }
                     else
                     {
-                        model.Add(field, property.Value["default"]); //getting default value for every key
+                        Model.Add(Field, Property.Value["default"]); //getting default value for every key
                     }
-                    prompts.Add(field, property.Value["x-prompt"]);
-                    enums.Add(field, property.Value["enum"]);
-                    types.Add(field, property.Value["type"]);
+                    Prompts.Add(Field, Property.Value["x-prompt"]);
+                    Enums.Add(Field, Property.Value["enum"]);
+                    Types.Add(Field, Property.Value["type"]);
                 }
             }
             
-            model["name"] = command[2];
-            ArrayList inputedValues = new ArrayList();
-            inputedValues.Add("name");
-            if (command.Length > 3)
+            Model["name"] = Command[2];
+            ArrayList InputtedValues = new ArrayList();
+            InputtedValues.Add("name");
+            if (Command.Length > 3)
             {
-                for (var i = 3; i < command.Length; i++)
+                for (var i = 3; i < Command.Length; i++)
                 {
-                    var command2 = command[i].Split(":");
-                    var firstPart = command2[0];
-                    var secondPart = command2[1];
-                    model[firstPart] = secondPart;
-                    inputedValues.Add(firstPart);
+                    var Command2 = Command[i].Split(":");
+                    var firstPart = Command2[0];
+                    var secondPart = Command2[1];
+                    Model[firstPart] = secondPart;
+                    InputtedValues.Add(firstPart);
 
                 }
             }
 
 
 
-            foreach (var question in prompts)
+            foreach (var Question in Prompts)
             {
-                if (inputedValues.Contains(question.Key))
+                if (InputtedValues.Contains(Question.Key))
                     continue;
-                model = promptAction(question, required2);
+                Model = promptAction(Question, Required2);
             }
 
-            ClassHelper(command[1]);
+            ClassHelper(Command[1]);
 
-            var dirFile = CurrentPath + templatePath + "/";
+            var DirFile = CurrentPath + TemplatePath + "/";
             
 
-            foreach (string fileName in GetFiles(dirFile))
+            foreach (string FileName in GetFiles(DirFile))
             {
-                var templateName = fileName.Replace(CurrentPath + templatePath + "/", "");
-                templateName = templateName.Replace(@"\", "/");
+                var TemplateName = FileName.Replace(CurrentPath + TemplatePath + "/", "");
+                TemplateName = TemplateName.Replace(@"\", "/");
                 
                 //templateName = templateName.Split('/').Last();
-                templateName = templateName.Replace(CurrentPath + templatePath + "/", "");
-                string pattern = @"__(.*?)__";
-                Regex regex = new Regex(pattern);
-                foreach (Match match in Regex.Matches(templateName, pattern))
+                TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
+                string Pattern = @"__(.*?)__";
+                Regex Regex = new Regex(Pattern);
+                foreach (Match match in Regex.Matches(TemplateName, Pattern))
                 {
-                    templateName = regex.Replace(templateName, model[match.Groups[1].Value].ToString(), 1);
+                    TemplateName = Regex.Replace(TemplateName, Model[match.Groups[1].Value].ToString(), 1);
                 }
 
-                int index = templateName.LastIndexOf(".");
-                if (index >= 0)
-                    templateName = templateName.Substring(0, index);
-                Generate(fileName, templateName);
+                int Index = TemplateName.LastIndexOf(".");
+                if (Index >= 0)
+                    TemplateName = TemplateName.Substring(0, Index);
+                Generate(FileName, TemplateName);
             }
         }
 
-        public IEnumerable<string> GetFiles(string path)
+        public IEnumerable<string> GetFiles(string Path)
         {
-            var firstPath = path;
-            Queue<string> queue = new Queue<string>();
-            queue.Enqueue(path);
-            while (queue.Count > 0)
+            var InitialPath = Path;
+            Queue<string> Queue = new Queue<string>();
+            Queue.Enqueue(Path);
+            while (Queue.Count > 0)
             {
-                path = queue.Dequeue();
+                Path = Queue.Dequeue();
                 //Console.WriteLine("Path " + path);
                 try
                 {
-                    foreach (string subDir in Directory.GetDirectories(path))
+                    foreach (string SubDir in Directory.GetDirectories(Path))
                     {
                         
-                        var directoryInsideTemplates = subDir.Replace(firstPath, "");
-                        var placeToCreateDirectory = CurrentDirectory + "/" + directoryInsideTemplates;
-                        System.IO.Directory.CreateDirectory(placeToCreateDirectory);
+                        var DirectoryInsideTemplates = SubDir.Replace(InitialPath, "");
+                        var PlaceToCreateDirectory = CurrentDirectory + "/" + DirectoryInsideTemplates;
+                        System.IO.Directory.CreateDirectory(PlaceToCreateDirectory);
 
-                        queue.Enqueue(subDir + "/");
+                        Queue.Enqueue(SubDir + "/");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception Ex)
                 {
-                    Console.Error.WriteLine(ex);
+                    Console.Error.WriteLine(Ex);
                 }
-                string[] files = null;
+                string[] Files = null;
                 try
                 {
-                    files = Directory.GetFiles(path);
+                    Files = Directory.GetFiles(Path);
                 }
-                catch (Exception ex)
+                catch (Exception Ex)
                 {
-                    Console.Error.WriteLine(ex);
+                    Console.Error.WriteLine(Ex);
                 }
-                if (files != null)
+                if (Files != null)
                 {
-                    for (int i = 0; i < files.Length; i++)
+                    for (int i = 0; i < Files.Length; i++)
                     {
-                        yield return files[i];
+                        yield return Files[i];
                     }
                 }
             }
         }
 
-        public void ClassHelper(string command)
+        public void ClassHelper(string Command) //Ovaj dio ne znam je li potreban, ali svaka komponenta koja se moze generisati
+                                                //bi trebalo da moze imati dodatne stvari koje su karakteristicne za nju
+                                                //da se mogu dodati, npr. za component su to filteri
         {
-            if (command == "component")
+            if (Command == "component")
             {
-                model = Component.AddDynamic(model);
+                Model = Component.AddDynamic(Model);
             }
-            else if (command == "component-list")
+            else if (Command == "component-list")
             {
-                model = ComponentList.AddDynamic(model);
+                Model = ComponentList.AddDynamic(Model);
             }
         }
 
-        public dynamic promptAction(dynamic question, dynamic required)
+        public dynamic promptAction(dynamic Question, dynamic Required)
         {
-            if (question.Value != null)
+            if (Question.Value != null)
             {
                 Console.CursorVisible = true;
-                Console.WriteLine(question.Value);
-                if (enums[question.Key] != null)
+                Console.WriteLine(Question.Value);
+                if (Enums[Question.Key] != null)
                 {
                     Console.CursorVisible = false;
-                    IEnumerable enumerable = enums[question.Key] as IEnumerable;
-                    List<string> opcije = new List<string>();
-                    foreach (var option in enumerable)
+                    IEnumerable EnumerableQuestions = Enums[Question.Key] as IEnumerable;
+                    List<string> Options = new List<string>();
+                    foreach (var Option in EnumerableQuestions)
                     {
-                        opcije.Add(option.ToString());
+                        Options.Add(Option.ToString());
                     }
 
 
-                    Menu menu = new Menu(opcije.ToArray());
-                    int selectedIndex = menu.Run();
-                    model[question.Key] = opcije[selectedIndex];
+                    Menu Menu = new Menu(Options.ToArray());
+                    int SelectedIndex = Menu.Run();
+                    Model[Question.Key] = Options[SelectedIndex];
 
                 }
 
-                else if (types[question.Key].ToString() == "boolean")
+                else if (Types[Question.Key].ToString() == "boolean")
                 {
-                    var def = Console.ReadLine();
-                    if (def != "")
+                    var Def = Console.ReadLine();
+                    if (Def != "")
                     {
-                        var res = model[question.Key];
-                        if (def == "No" || def == "no" || def == "n" || def == "NO")
+                        var res = Model[Question.Key];
+                        if (Def == "No" || Def == "no" || Def == "n" || Def == "NO")
                             res = false;
-                        else if (def == "Yes" || def == "yes" || def == "y" || def == "YES")
+                        else if (Def == "Yes" || Def == "yes" || Def == "y" || Def == "YES")
                             res = true;
-                        model[question.Key] = res;
+                        Model[Question.Key] = res;
                     }
                 }
                 else
                 {
-                    var inputedValue = Console.ReadLine();
-                    if (required.Contains(question.Key) && inputedValue == "")
-                        model[question.Key] = model["name"];
-                    if (inputedValue != "")
-                        model[question.Key] = inputedValue;
+                    var InputtedValue = Console.ReadLine();
+                    if (Required.Contains(Question.Key) && InputtedValue == "")
+                        Model[Question.Key] = Model["name"];
+                    if (InputtedValue != "")
+                        Model[Question.Key] = InputtedValue;
                 }
                 Console.WriteLine("");
             }
-            return model;
+            return Model;
         }
 
-        public async void Generate(string templatePath, string outputFileName)
+        public async void Generate(string templatePath, string OutputFileName)
         {
-            string path = CurrentDirectory + "/";
-            var engine = new RazorLightEngineBuilder()
+            string DestinationPath = CurrentDirectory + "/";
+            var Engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
                   .UseEmbeddedResourcesProject(typeof(Component))
                   .UseMemoryCachingProvider()
                   .Build();
 
-            string template = "";
+            string Template = "";
             try
             {
-                template = File.ReadAllText(templatePath);
+                Template = File.ReadAllText(templatePath);
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-            string result = await engine.CompileRenderStringAsync("templateKey2", template, model);
+            string Result = await Engine.CompileRenderStringAsync("templateKey2", Template, Model);
             
 
             //string outputName = model["name"].ToString() + "." + language;
 
             
 
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, outputFileName)))
+            using (StreamWriter OutputFile = new StreamWriter(System.IO.Path.Combine(DestinationPath, OutputFileName)))
             {
-                await outputFile.WriteAsync(result);
-                Console.WriteLine("Successfully generated " + outputFileName);
+                await OutputFile.WriteAsync(Result);
+                Console.WriteLine("Successfully generated " + OutputFileName);
             }
         }
     }

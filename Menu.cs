@@ -8,10 +8,10 @@ namespace SchematicsProject
     {
         private int SelectedIndex;
         private string[] Options;
-        private bool first = true;
-        public Menu(string[] options)
+        private bool First = true;
+        public Menu(string[] Options)
         {
-            Options = options;
+            this.Options = Options;
             SelectedIndex = 0;
         }
 
@@ -19,7 +19,7 @@ namespace SchematicsProject
         {
             Console.CursorVisible = false;
 
-            if (!first)
+            if (!First)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - Options.Length);
 
@@ -28,62 +28,62 @@ namespace SchematicsProject
 
             for (int i = 0; i < Options.Length; i++)
             {
-                if (!first)
+                if (!First)
                 {
                     ClearCurrentConsoleLine();
                 }
-                string currentOption = Options[i];
-                string prefix;
+                string CurrentOption = Options[i];
+                string Prefix;
 
                 if (i == SelectedIndex)
                 {
-                    prefix = ">";
+                    Prefix = ">";
                 }
                 else
                 {
-                    prefix = "";
+                    Prefix = "";
                 }
-                Console.WriteLine($"{prefix}{currentOption}");
+                Console.WriteLine($"{Prefix}{CurrentOption}");
 
             }
-            first = false;
+            First = false;
 
         }
 
         public static void ClearCurrentConsoleLine()
         {
 
-            int currentLineCursor = Console.CursorTop;
+            int CurrentLineCursor = Console.CursorTop;
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = 0; i < Console.WindowWidth; i++)
                 Console.Write(" ");
-            Console.SetCursorPosition(0, currentLineCursor);
+            Console.SetCursorPosition(0, CurrentLineCursor);
 
         }
 
 
         public int Run()
         {
-            ConsoleKey keyPressed;
-            first = true;
+            ConsoleKey KeyPressed;
+            First = true;
             do
             {
                 DisplayOptions();
-                first = false;
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                keyPressed = keyInfo.Key;
-                if (keyPressed == ConsoleKey.UpArrow)
+                First = false;
+                ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
+                KeyPressed = KeyInfo.Key;
+                if (KeyPressed == ConsoleKey.UpArrow)
                 {
                     if(SelectedIndex!=0)
                         SelectedIndex--;
                 }
-                else if (keyPressed == ConsoleKey.DownArrow)
+                else if (KeyPressed == ConsoleKey.DownArrow)
                 {
                     if(SelectedIndex!=Options.Length-1)
                         SelectedIndex++;
                 }
             }
-            while (keyPressed != ConsoleKey.Enter);
+            while (KeyPressed != ConsoleKey.Enter);
             return SelectedIndex;
         }
 

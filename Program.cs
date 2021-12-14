@@ -17,35 +17,35 @@ namespace SchematicsProject
 
         public static async Task Main(string[] args)
         {
-            var serviceCollection = new ServiceCollection();
-            IConfiguration configuration;
-            configuration = new ConfigurationBuilder().SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName).AddJsonFile("appsettings.json").Build();
-            serviceCollection.AddSingleton<IConfiguration>(configuration);
+            var ServiceCollection = new ServiceCollection();
+            IConfiguration Configuration;
+            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName).AddJsonFile("appsettings.json").Build();
+            ServiceCollection.AddSingleton<IConfiguration>(Configuration);
             Console.CursorVisible = true;
-            string input = "";
-            bool first = true;
-            foreach (string argument in args)
+            string Input = "";
+            bool First = true;
+            foreach (string Argument in args)
             {
-                if (first)
+                if (First)
                 {
-                    input += argument;
-                    first = false;
+                    Input += Argument;
+                    First = false;
                 }
                 else
                 {
-                    input += " " + argument;
+                    Input += " " + Argument;
                 }
             }
 
             if (args.Length == 0) {
                 Console.WriteLine("Input command");
-                input = Console.ReadLine();
+                Input = Console.ReadLine();
             }
 
-                var engine = new Engine(configuration);
+                var Engine = new Engine(Configuration);
                 try
                 {
-                    await engine.Input(input);
+                    await Engine.Input(Input);
                 }
                 catch (ArgumentException e)
                 {

@@ -7,6 +7,6 @@ namespace SchematicsProject
     public class Filter
     {
         public string Name { get; set; }
-        public Object filter { get; set; }
+        public Object FilterObject { get; set; }
     }
 }
