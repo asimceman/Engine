@@ -41,9 +41,9 @@ namespace SchematicsProject
                 throw new ArgumentException("invalid input"); 
 
             var enviroment = System.Environment.CurrentDirectory;
-            string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
+            //string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
 
-//            string currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            string currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
 
             string path = Path.Combine(currentPath, "collection.json");
 
@@ -118,26 +118,15 @@ namespace SchematicsProject
             ClassHelper(command[1]);
 
             var dirFile = currentPath + templatePath + "/";
-            /*foreach (string fileName in Directory.GetFiles(dirFile))
-            {
-                var templateName = fileName.Split('/').Last();
-                string pattern = @"__(.*?)__";
-                Regex regex = new Regex(pattern);
-                foreach (Match match in Regex.Matches(templateName, pattern))
-                {
-                    templateName = regex.Replace(templateName, model[match.Groups[1].Value].ToString(), 1);
-                }
-                
-                int index = templateName.LastIndexOf(".");
-                if (index >= 0)
-                    templateName = templateName.Substring(0, index);
-                Generate(fileName, templateName);
-            }*/
+            
 
             foreach (string fileName in GetFiles(dirFile))
             {
-                var templateName = fileName.Replace(@"\", "/");
-                templateName = templateName.Split('/').Last();
+                var templateName = fileName.Replace(currentPath + templatePath + "/", "");
+                templateName = templateName.Replace(@"\", "/");
+                
+                //templateName = templateName.Split('/').Last();
+                templateName = templateName.Replace(currentPath + templatePath + "/", "");
                 string pattern = @"__(.*?)__";
                 Regex regex = new Regex(pattern);
                 foreach (Match match in Regex.Matches(templateName, pattern))
@@ -154,16 +143,26 @@ namespace SchematicsProject
 
         static IEnumerable<string> GetFiles(string path)
         {
+            var firstPath = path;
             Queue<string> queue = new Queue<string>();
             queue.Enqueue(path);
             while (queue.Count > 0)
             {
                 path = queue.Dequeue();
+                //Console.WriteLine("Path " + path);
                 try
                 {
                     foreach (string subDir in Directory.GetDirectories(path))
                     {
-                        queue.Enqueue(subDir);
+                        
+                        var directoryInsideTemplates = subDir.Replace(firstPath, "");
+                        var currentDirectory = Directory.GetCurrentDirectory();
+                        /*var enviroment = System.Environment.CurrentDirectory;
+                        var currentDirectory = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");*/
+                        var placeToCreateDirectory = currentDirectory + "/" + directoryInsideTemplates;
+                        System.IO.Directory.CreateDirectory(placeToCreateDirectory);
+
+                        queue.Enqueue(subDir + "/");
                     }
                 }
                 catch (Exception ex)
@@ -252,10 +251,11 @@ namespace SchematicsProject
 
         public async void Generate(string templatePath, string outputFileName)
         {
-            //string currentPath = Directory.GetCurrentDirectory();
+            string currentPath = Directory.GetCurrentDirectory();
+            
             var enviroment = System.Environment.CurrentDirectory;
-            string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
-
+            //string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
+            string path = currentPath + "/";
             var engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
                   .UseEmbeddedResourcesProject(typeof(Component))
@@ -273,9 +273,11 @@ namespace SchematicsProject
             }
 
             string result = await engine.CompileRenderStringAsync("templateKey2", template, model);
-            string path = currentPath;
+            
 
             //string outputName = model["name"].ToString() + "." + language;
+
+            
 
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, outputFileName)))
             {

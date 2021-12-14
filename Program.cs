@@ -11,12 +11,6 @@ namespace SchematicsProject
 
         public static async Task Main(string[] args)
         {
-            /*Console.WriteLine(args[0]);
-            Console.WriteLine(args[1]);
-            Console.WriteLine(args[2]);*/
-
-
-
             Console.CursorVisible = true;
             string input = "";
             bool first = true;
