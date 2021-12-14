@@ -1,0 +1,10 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SchematicsProject.component.Files.Pesme_moje
+{
+    class danka
+    {
+    }
+}

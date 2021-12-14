@@ -10,7 +10,6 @@
       "enum": [ "Table", "Cards", "List" ],
       "type": "string",
       "x-prompt": "Data is represented as?"
-
     },
     "path": {
       "type": "string",

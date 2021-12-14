@@ -10,6 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="component\Files\Prokleta\Je\Ova\__name__.Dankahtml.template" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="component\Files\Prokleta\Je\Ova\__name__.Dankahtml.template" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Razor.Templating.Core" Version="1.5.0" />
@@ -17,17 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="component-list\GeneratedFiles\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="component-list\component-listTS.template">
-      <SubType>Code</SubType>
-    </None>
+    <Folder Include="component-list\Files\" />
   </ItemGroup>
 
 </Project>

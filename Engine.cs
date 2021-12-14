@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace SchematicsProject
 
         public async Task Input(string input)
         {
-            input = Regex.Replace(input, @"\s+", " ");
+            input = Regex.Replace(input, @"\s+", " ");   
 
             var command = input.Split(" ");
             if (command.Length < 3)
@@ -37,12 +38,12 @@ namespace SchematicsProject
             }
 
             if (command[0] != "-t")
-                return;
+                throw new ArgumentException("invalid input"); 
 
             var enviroment = System.Environment.CurrentDirectory;
             string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
-            //string currentPath = Directory.GetCurrentDirectory();
 
+//            string currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
 
             string path = Path.Combine(currentPath, "collection.json");
 
@@ -88,7 +89,7 @@ namespace SchematicsProject
                     types.Add(field, property.Value["type"]);
                 }
             }
-
+            
             model["name"] = command[2];
             ArrayList inputedValues = new ArrayList();
             inputedValues.Add("name");
@@ -117,7 +118,7 @@ namespace SchematicsProject
             ClassHelper(command[1]);
 
             var dirFile = currentPath + templatePath + "/";
-            foreach (string fileName in Directory.GetFiles(dirFile))
+            /*foreach (string fileName in Directory.GetFiles(dirFile))
             {
                 var templateName = fileName.Split('/').Last();
                 string pattern = @"__(.*?)__";
@@ -130,10 +131,62 @@ namespace SchematicsProject
                 int index = templateName.LastIndexOf(".");
                 if (index >= 0)
                     templateName = templateName.Substring(0, index);
-                Generate(fileName, factoryPath + "./GeneratedFiles/", templateName);
-            }
-                
+                Generate(fileName, templateName);
+            }*/
 
+            foreach (string fileName in GetFiles(dirFile))
+            {
+                var templateName = fileName.Replace(@"\", "/");
+                templateName = templateName.Split('/').Last();
+                string pattern = @"__(.*?)__";
+                Regex regex = new Regex(pattern);
+                foreach (Match match in Regex.Matches(templateName, pattern))
+                {
+                    templateName = regex.Replace(templateName, model[match.Groups[1].Value].ToString(), 1);
+                }
+
+                int index = templateName.LastIndexOf(".");
+                if (index >= 0)
+                    templateName = templateName.Substring(0, index);
+                Generate(fileName, templateName);
+            }
+        }
+
+        static IEnumerable<string> GetFiles(string path)
+        {
+            Queue<string> queue = new Queue<string>();
+            queue.Enqueue(path);
+            while (queue.Count > 0)
+            {
+                path = queue.Dequeue();
+                try
+                {
+                    foreach (string subDir in Directory.GetDirectories(path))
+                    {
+                        queue.Enqueue(subDir);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex);
+                }
+                string[] files = null;
+                try
+                {
+                    files = Directory.GetFiles(path);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex);
+                }
+                if (files != null)
+                {
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        yield return files[i];
+                    }
+                }
+            }
         }
 
         public void ClassHelper(string command)
@@ -197,12 +250,11 @@ namespace SchematicsProject
             return model;
         }
 
-        public async void Generate(string templatePath, string outputFilesPath, string outputFileName)
+        public async void Generate(string templatePath, string outputFileName)
         {
+            //string currentPath = Directory.GetCurrentDirectory();
             var enviroment = System.Environment.CurrentDirectory;
-            //string currentPath = Directory.GetCurrentDirectory(); 
             string currentPath = Directory.GetParent(enviroment).Parent.FullName.Replace("\\bin", "");
-            //string outputFilesPath = "\\OutputFiles";
 
             var engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
