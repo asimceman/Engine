@@ -349,3 +349,6 @@ C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netco
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\__name____service__.js.template
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\schema.json
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\collection.json
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\PesmeTvoje\__name__.component.__style__.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\Folder1\Folder2\__name__.component.__style__.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\PesmeTvoje\__name__.component.__style__.template

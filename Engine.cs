@@ -270,7 +270,7 @@ namespace SchematicsProject
             string DestinationPath = CurrentDirectory + "/";
             var Engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
-                  .UseEmbeddedResourcesProject(typeof(Component))
+                  .UseEmbeddedResourcesProject(typeof(ComponentList))
                   .UseMemoryCachingProvider()
                   .Build();
 

@@ -1,6 +1,7 @@
 C:\Users\User\source\repos\Publishment\SchematicsProject.exe
 C:\Users\User\source\repos\Publishment\component\Component.cs
 C:\Users\User\source\repos\Publishment\component\Files\Pesme moje\PesmeMoje.html.template
+C:\Users\User\source\repos\Publishment\component\Files\PesmeTvoje\__name__.component.__style__.template
 C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\dotakoSamDnoZivota.html.template
 C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__name__.Danka.html.template
 C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__service__Service.Danka.html.template
@@ -10,6 +11,8 @@ C:\Users\User\source\repos\Publishment\component\Files\__name__.ts.template
 C:\Users\User\source\repos\Publishment\component\Files\__name____service__.js.template
 C:\Users\User\source\repos\Publishment\component\schema.json
 C:\Users\User\source\repos\Publishment\component-list\ComponentList.cs
+C:\Users\User\source\repos\Publishment\component-list\Files\Folder1\Folder2\__name__.component.__style__.template
+C:\Users\User\source\repos\Publishment\component-list\Files\PesmeTvoje\__name__.component.__style__.template
 C:\Users\User\source\repos\Publishment\component-list\Files\__name__.component.__style__.template
 C:\Users\User\source\repos\Publishment\component-list\Files\__name__.html.template
 C:\Users\User\source\repos\Publishment\component-list\Files\__name__.ts.template
