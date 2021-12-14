@@ -1,4 +1,22 @@
 C:\Users\User\source\repos\Publishment\SchematicsProject.exe
+C:\Users\User\source\repos\Publishment\component\Component.cs
+C:\Users\User\source\repos\Publishment\component\Files\Pesme moje\PesmeMoje.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\dotakoSamDnoZivota.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__name__.Danka.html.template
+C:\Users\User\source\repos\Publishment\component\Files\Prokleta\Je\Ova\__service__Service.Danka.html.template
+C:\Users\User\source\repos\Publishment\component\Files\__name__.component.__style__.template
+C:\Users\User\source\repos\Publishment\component\Files\__name__.html.template
+C:\Users\User\source\repos\Publishment\component\Files\__name__.ts.template
+C:\Users\User\source\repos\Publishment\component\Files\__name____service__.js.template
+C:\Users\User\source\repos\Publishment\component\schema.json
+C:\Users\User\source\repos\Publishment\component-list\ComponentList.cs
+C:\Users\User\source\repos\Publishment\component-list\Files\__name__.component.__style__.template
+C:\Users\User\source\repos\Publishment\component-list\Files\__name__.html.template
+C:\Users\User\source\repos\Publishment\component-list\Files\__name__.ts.template
+C:\Users\User\source\repos\Publishment\component-list\Files\__name____service__.js.template
+C:\Users\User\source\repos\Publishment\component-list\schema.json
+C:\Users\User\source\repos\Publishment\appsettings.json
+C:\Users\User\source\repos\Publishment\collection.json
 C:\Users\User\source\repos\Publishment\refs\Microsoft.AspNetCore.Antiforgery.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.AspNetCore.Authentication.Abstractions.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.AspNetCore.Authentication.Cookies.dll
@@ -89,8 +107,6 @@ C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Configuration.J
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Configuration.KeyPerFile.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Configuration.UserSecrets.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Configuration.Xml.dll
-C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.Diagnostics.HealthChecks.dll
 C:\Users\User\source\repos\Publishment\refs\Microsoft.Extensions.FileProviders.Abstractions.dll
@@ -591,8 +607,6 @@ C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Configuration.KeyPer
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Configuration.UserSecrets.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Configuration.Xml.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Configuration.dll
-C:\Users\User\source\repos\Publishment\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\User\source\repos\Publishment\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Diagnostics.HealthChecks.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.FileProviders.Abstractions.dll
@@ -638,6 +652,8 @@ C:\Users\User\source\repos\Publishment\Microsoft.CodeAnalysis.dll
 C:\Users\User\source\repos\Publishment\Microsoft.CodeAnalysis.CSharp.dll
 C:\Users\User\source\repos\Publishment\Microsoft.CodeAnalysis.Razor.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\User\source\repos\Publishment\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\User\source\repos\Publishment\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.DependencyModel.dll
 C:\Users\User\source\repos\Publishment\Microsoft.Extensions.Primitives.dll
 C:\Users\User\source\repos\Publishment\Newtonsoft.Json.dll

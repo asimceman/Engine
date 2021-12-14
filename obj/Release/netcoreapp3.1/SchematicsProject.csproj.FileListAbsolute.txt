@@ -332,3 +332,20 @@ C:\Users\User\source\repos\SchematicsProject\SchematicsProject\obj\Release\netco
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\appsettings.json
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Component.cs
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\Pesme moje\PesmeMoje.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\Prokleta\Je\dotakoSamDnoZivota.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\Prokleta\Je\Ova\__name__.Danka.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\Prokleta\Je\Ova\__service__Service.Danka.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\__name__.component.__style__.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\__name__.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\__name__.ts.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\Files\__name____service__.js.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component\schema.json
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\ComponentList.cs
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\__name__.component.__style__.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\__name__.html.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\__name__.ts.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\Files\__name____service__.js.template
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\component-list\schema.json
+C:\Users\User\source\repos\SchematicsProject\SchematicsProject\bin\Release\netcoreapp3.1\collection.json
