@@ -1,13 +1,11 @@
 ﻿{
   "schematics": {
     "component": {
-      "aliases": [ "c" ],
       "factory": "./component",
       "description": "Create an Angular component.",
       "schema": "./component/schema.json"
     },
     "component-list": {
-      "aliases": [ "c-l", "c-tbl" ],
       "factory": "./component-list",
       "description": "Create an Angular table | cards | list component.",
       "schema": "./component-list/schema.json"
