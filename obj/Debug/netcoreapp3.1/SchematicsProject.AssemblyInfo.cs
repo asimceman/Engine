@@ -11,7 +11,7 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Lodecta")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Kodecta")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Library for generating Razor templates")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

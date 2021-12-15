@@ -10,9 +10,9 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>SchematicsGenerator</ToolCommandName>
 	  <PackageOutputPath>./nupkg</PackageOutputPath>
-	  <PackageId>Asm.Generator.Schematics</PackageId>
+	  <PackageId>Kodecta.Generator.Schematics</PackageId>
 	  <Authors>Kodecta</Authors>
-	  <Company>Lodecta</Company>
+	  <Company>Kodecta</Company>
 	  <Description>Library for generating Razor templates</Description>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageTags>Engine, Generator</PackageTags>
