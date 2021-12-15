@@ -7,6 +7,16 @@
 	  <PreserveCompilationContext>true</PreserveCompilationContext>
 	  <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
 	  <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+	  <PackAsTool>true</PackAsTool>
+	  <ToolCommandName>SchematicsGenerator</ToolCommandName>
+	  <PackageOutputPath>./nupkg</PackageOutputPath>
+	  <PackageId>Asm.Generator.Schematics</PackageId>
+	  <Authors>Kodecta</Authors>
+	  <Company>Lodecta</Company>
+	  <Description>Library for generating Razor templates</Description>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageTags>Engine, Generator</PackageTags>
+	  <RepositoryUrl>https://github.com/asimceman/Engine</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

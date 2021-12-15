@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\User\\source\\repos\\SchematicsProject\\SchematicsProject\\SchematicsProject.csproj",
-        "projectName": "SchematicsProject",
+        "projectName": "Asm.Generator.Schematics",
         "projectPath": "C:\\Users\\User\\source\\repos\\SchematicsProject\\SchematicsProject\\SchematicsProject.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\User\\source\\repos\\SchematicsProject\\SchematicsProject\\obj\\",
