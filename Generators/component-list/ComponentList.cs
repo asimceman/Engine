@@ -8,53 +8,52 @@ namespace SchematicsProject.component_list
 {
     public class ComponentList
     {
-        public static dynamic AddDynamic(IDictionary<string, Object> model)
+        public static dynamic AddDynamic(IDictionary<string, Object> Model)
         {
 
-            ArrayList filters = new ArrayList();
-            var filter = "";
+            ArrayList Filters = new ArrayList();
+            var Filter = "";
             do
             {
                 Console.WriteLine("Which filters does this component need (press enter or empty line to finish)");
-                ExpandoObject tip = new ExpandoObject();
-                filter = Console.ReadLine();
-                if (!string.IsNullOrEmpty(filter))
+                ExpandoObject Tip = new ExpandoObject();
+                Filter = Console.ReadLine();
+                if (!string.IsNullOrEmpty(Filter))
                 {
                     Console.CursorVisible = false;
-                    bool first = true;
 
-                    List<string> options = new List<string>();
+                    List<string> Options = new List<string>();
 
-                    options.Add("input");
-                    options.Add("datepicker");
-                    options.Add("autocomplete");
-                    options.Add("select");
-                    options.Add("checkbox");
-                    options.Add("textarea");
+                    Options.Add("input");
+                    Options.Add("datepicker");
+                    Options.Add("autocomplete");
+                    Options.Add("select");
+                    Options.Add("checkbox");
+                    Options.Add("textarea");
                     Console.WriteLine("Which type?");
-                    Menu menu = new Menu(options.ToArray());
-                    int selectedIndex = menu.Run();
+                    Menu Menu = new Menu(Options.ToArray());
+                    int SelectedIndex = Menu.Run();
 
-                    var filterType = options[selectedIndex];
+                    var FilterType = Options[SelectedIndex];
                     Console.WriteLine("Size?");
-                    options.RemoveAll(x => true);
-                    options.Add("2");
-                    options.Add("3");
-                    options.Add("6");
-                    options.Add("12");
-                    menu = new Menu(options.ToArray());
-                    selectedIndex = menu.Run();
-                    var size = int.Parse(options[selectedIndex]);
-                    tip.TryAdd("filterType", filterType);
-                    tip.TryAdd("size", size);
+                    Options.RemoveAll(x => true);
+                    Options.Add("2");
+                    Options.Add("3");
+                    Options.Add("6");
+                    Options.Add("12");
+                    Menu = new Menu(Options.ToArray());
+                    SelectedIndex = Menu.Run();
+                    var Size = int.Parse(Options[SelectedIndex]);
+                    Tip.TryAdd("filterType", FilterType);
+                    Tip.TryAdd("size", Size);
                     //Object filterinjo = new Object({ filter.ToString() = tip; });
-                    filters.Add(new Filter { Name = filter, FilterObject = tip });
+                    Filters.Add(new Filter { Name = Filter, FilterObject = Tip });
                 }
             }
-            while (filter != "");
-            model.TryAdd("filters", filters);
+            while (Filter != "");
+            Model.TryAdd("filters", Filters);
 
-            return model;
+            return Model;
 
         }
     }
