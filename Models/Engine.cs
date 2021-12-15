@@ -211,12 +211,16 @@ namespace SchematicsProject
             }
         }
 
-        public void promptAction(dynamic Question, dynamic Required)
+        public void promptAction(dynamic Question, ArrayList Required)
         {
             if (Question.Value != null)
             {
                 Console.CursorVisible = true;
-                Console.WriteLine(Question.Value);
+                string RequiredField = "";
+                if (Required.Contains(Question.Key)) {
+                    RequiredField = " (This field is required, if you don't provide a value, it will have the same value as the provided name)";
+                }
+                Console.WriteLine(Question.Value + RequiredField);
                 if (Enums[Question.Key] != null)
                 {
                     Console.CursorVisible = false;
