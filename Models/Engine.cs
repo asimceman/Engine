@@ -24,14 +24,14 @@ namespace SchematicsProject
         private IDictionary<string, Object> Prompts = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> Enums = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> Types = new ExpandoObject() as IDictionary<string, Object>;
-        string CurrentPath = "";
+        string GeneratorPath = "";
         string CurrentDirectory = "";
         string TemplatePath = "";
 
 
         public Engine()
         {
-                CurrentPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                GeneratorPath = System.AppDomain.CurrentDomain.BaseDirectory;
                 CurrentDirectory = Directory.GetCurrentDirectory();
         }
 
@@ -73,7 +73,7 @@ namespace SchematicsProject
 
             ClassHelper(Command[1]);
 
-            var TemplateDirectory = CurrentPath + TemplatePath + "/";
+            var TemplateDirectory = GeneratorPath + TemplatePath + "/";
 
             GetTemplatesAndGenerate(TemplateDirectory);
         }
@@ -90,7 +90,7 @@ namespace SchematicsProject
         }
 
         public Dictionary<string, Object> getSchema(string ComponentToGenerate) {
-            string CollectionPath = Path.Combine(CurrentPath, "collection.json");
+            string CollectionPath = Path.Combine(GeneratorPath, "collection.json");
 
             JObject Data = JObject.Parse(File.ReadAllText(CollectionPath));
             var Schematics = Data["schematics"];
@@ -103,7 +103,7 @@ namespace SchematicsProject
             var FactoryPath = Schematics[ComponentToGenerate]["factory"];
             TemplatePath = FactoryPath + "./Files";
 
-            var SchemaPath = Path.Combine(CurrentPath, Component["schema"].ToString());
+            var SchemaPath = Path.Combine(GeneratorPath, Component["schema"].ToString());
             JObject Schema = JObject.Parse(File.ReadAllText(SchemaPath)); //getting json for wanted object
             return Schema.ToObject<Dictionary<string, Object>>();
         }
@@ -138,7 +138,7 @@ namespace SchematicsProject
         {
             foreach (string TemplateFile in GetFiles(TemplateDirectory))
             {
-                var TemplateName = TemplateFile.Replace(CurrentPath + TemplatePath + "/", "");
+                var TemplateName = TemplateFile.Replace(GeneratorPath + TemplatePath + "/", "");
                 TemplateName = TemplateName.Replace(@"\", "/");
                 //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
                 string Pattern = @"__(.*?)__";
