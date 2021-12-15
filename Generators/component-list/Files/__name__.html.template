@@ -7,7 +7,7 @@
 	}
 	@foreach (var item in Model.filters)
 	{
-	<div>@item.filter.size</div>
+	<div>@item.size</div>
 	}
 	<h1>@Model.service</h1>
 	@if(Model.searchField)
