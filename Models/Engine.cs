@@ -205,6 +205,15 @@ namespace SchematicsProject
             }
         }
 
+        public dynamic determineVariableType(dynamic EnumQuestion, string selected) 
+        {
+            if (EnumQuestion["type"].ToString() == "int")
+            {
+                return int.Parse(selected);
+            }
+            return selected;
+        }
+
         public void questionArrayPrompt(dynamic Question)
         {
             var First = true;
@@ -228,25 +237,27 @@ namespace SchematicsProject
                 Console.WriteLine("");
                 if (!string.IsNullOrEmpty(Filter))
                 {
-                    IDictionary<string, Object> Tip = new ExpandoObject() as IDictionary<string, object>;
+                    IDictionary<string, dynamic> Tip = new ExpandoObject() as IDictionary<string, dynamic>;
                     Tip.TryAdd("name", Filter);
                     Console.CursorVisible = false;
                     foreach (JObject EnumQuestion in Questions)
                     {
-
-                        string[] options = EnumQuestion["options"].ToObject<string[]>();
-                        Console.WriteLine(EnumQuestion["question"].ToString());
-                        Menu Menu = new Menu(options);
-                        int SelectedIndex = Menu.Run();
-                        var selected = options[SelectedIndex];
-
-                        if (EnumQuestion["type"].ToString() == "int")
+                        if (EnumQuestion["options"] != null)
                         {
-                            Tip.TryAdd(EnumQuestion["name"].ToString(), int.Parse(selected));
+                            string[] options = EnumQuestion["options"].ToObject<string[]>();
+                            Console.WriteLine(EnumQuestion["question"].ToString());
+                            Menu Menu = new Menu(options);
+                            int SelectedIndex = Menu.Run();
+                            var selected = options[SelectedIndex];
+                            
+                            Tip.Add(EnumQuestion["name"].ToString(), determineVariableType(EnumQuestion, selected));
+                            
                         }
                         else
                         {
-                            Tip.TryAdd(EnumQuestion["name"].ToString(), selected);
+                            Console.WriteLine(EnumQuestion["question"].ToString());
+                            var inputtedValue = Console.ReadLine();
+                            Tip.Add(EnumQuestion["name"].ToString(), determineVariableType(EnumQuestion, inputtedValue));
                         }
                         Console.WriteLine("");
                     }

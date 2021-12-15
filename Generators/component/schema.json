@@ -202,10 +202,21 @@
         {
           "question": "Size?",
           "name": "size",
-          "type":  "int",
+          "type": "int",
           "options": [ 2, 3, 4 ]
         }
 
+      ]
+    },
+    "columns": {
+      "type": "questionArray",
+      "x-prompt": "Which column do you want to add? (press enter or empty line to finish)",
+      "enum": [
+        {
+          "question": "Which type?",
+          "name": "filterType",
+          "type": "string"
+        }
       ]
     }
   },
