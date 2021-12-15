@@ -28,22 +28,11 @@ namespace SchematicsProject
         string CurrentDirectory = "";
         string TemplatePath = "";
 
-        public IConfiguration Configuration { get; set; }
 
-        public Engine(IConfiguration Configuration)
+        public Engine()
         {
-            this.Configuration = Configuration;
-            if (this.Configuration.GetSection("Env").Value == "Publish")
-            {
                 CurrentPath = System.AppDomain.CurrentDomain.BaseDirectory;
                 CurrentDirectory = Directory.GetCurrentDirectory();
-            }
-            else if (this.Configuration.GetSection("Env").Value == "Debug")
-            {
-                var Environment = System.Environment.CurrentDirectory;
-                CurrentPath = Directory.GetParent(Environment).Parent.FullName.Replace("\\bin", "");
-                CurrentDirectory = CurrentPath;
-            }
         }
 
         public async Task InputProcces(string Input)

@@ -10,10 +10,6 @@ namespace SchematicsProject
     {
         public static async Task Main(string[] args)
         {
-            var ServiceCollection = new ServiceCollection();
-            IConfiguration Configuration;
-            Configuration = new ConfigurationBuilder().SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName).AddJsonFile("appsettings.json").Build();
-            ServiceCollection.AddSingleton<IConfiguration>(Configuration);
 
             Console.CursorVisible = true;
 
@@ -24,7 +20,7 @@ namespace SchematicsProject
                 Input = Console.ReadLine();
             }
 
-            var Engine = new Engine(Configuration);
+            var Engine = new Engine();
             try
             {
                 await Engine.InputProcces(Input);
