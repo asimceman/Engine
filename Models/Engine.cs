@@ -56,11 +56,14 @@ namespace SchematicsProject
             {
                 for (var i = 3; i < Command.Length; i++)
                 {
-                    var CommandSplit = Command[i].Split(":");
+                    var CommandSplit = Command[i].Split("-");
                     Model[CommandSplit[0]] = CommandSplit[1];
                     InputtedValues.Add(CommandSplit[0]);
                 }
             }
+
+            
+
 
 
 
@@ -74,6 +77,15 @@ namespace SchematicsProject
             ClassHelper(Command[1]);
 
             var TemplateDirectory = GeneratorPath + TemplatePath + "/";
+
+            if (Model.ContainsKey("templatesDirectory"))
+            {
+                TemplateDirectory = Model["templatesDirectory"].ToString();
+                if (!TemplateDirectory.EndsWith("/"))
+                {
+                    TemplateDirectory += "/";
+                }
+            }
 
             GetTemplatesAndGenerate(TemplateDirectory);
         }
@@ -138,7 +150,7 @@ namespace SchematicsProject
         {
             foreach (string TemplateFile in GetFiles(TemplateDirectory))
             {
-                var TemplateName = TemplateFile.Replace(GeneratorPath + TemplatePath + "/", "");
+                var TemplateName = TemplateFile.Replace(TemplateDirectory, "");
                 TemplateName = TemplateName.Replace(@"\", "/");
                 //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
                 string Pattern = @"__(.*?)__";
