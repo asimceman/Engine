@@ -1,14 +1,14 @@
 ﻿{
   "schematics": {
     "component": {
-      "factory": "./component",
+      "factory": "./Generators/component",
       "description": "Create an Angular component.",
-      "schema": "./component/schema.json"
+      "schema": "./Generators/component/schema.json"
     },
     "component-list": {
-      "factory": "./component-list",
+      "factory": "./Generators/component-list",
       "description": "Create an Angular table | cards | list component.",
-      "schema": "./component-list/schema.json"
+      "schema": "./Generators/component-list/schema.json"
     }
   }
 }

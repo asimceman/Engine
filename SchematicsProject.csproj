@@ -25,10 +25,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Razor.Templating.Core" Version="1.5.0" />
     <PackageReference Include="RazorLight" Version="2.0.0-beta4" />
-	<Content Include="component\**">
+	<Content Include="Generators\component\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
-	<Content Include="component-list\**">
+	<Content Include="Generators\component-list\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
 	<Content Include="appsettings.json">
