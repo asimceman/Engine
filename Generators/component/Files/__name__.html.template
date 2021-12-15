@@ -5,9 +5,11 @@
 	return Regex.Replace(dashed,@"/[A-Z]/g", m => "-" + m.ToString().ToLower()).ToString();
 	}
 	}
-	@foreach (var item in Model.filters)
+	@foreach (var filter in Model.filters)
 	{
-	<div>@item.filter.size</div>
+	<div>@filter.name</div>
+	<div>@filter.size</div>
+	<div>@filter.filterType</div>
 	}
 	<h1>@Model.service</h1>
 	@if(Model.searchField)

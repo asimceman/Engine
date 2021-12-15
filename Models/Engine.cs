@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RazorLight;
-using SchematicsProject.component_list;
-using SchematicsProject.IndexClasses;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +18,7 @@ namespace SchematicsProject
 
     public class Engine
     {
-        private IDictionary<string, Object> Model = new ExpandoObject() as IDictionary<string, Object>;
+        private IDictionary<string, Object> Model = new  ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> Prompts = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> Enums = new ExpandoObject() as IDictionary<string, Object>;
         private IDictionary<string, Object> Types = new ExpandoObject() as IDictionary<string, Object>;
@@ -73,8 +71,6 @@ namespace SchematicsProject
                     continue;
                 promptAction(Question, RequiredList);
             }
-
-            ClassHelper(Command[1]);
 
             var TemplateDirectory = GeneratorPath + TemplatePath + "/";
 
@@ -209,19 +205,61 @@ namespace SchematicsProject
             }
         }
 
-        public void ClassHelper(string Command) //Ovaj dio ne znam je li potreban, ali svaka komponenta koja se moze generisati
-                                                //bi trebalo da moze imati dodatne stvari koje su karakteristicne za nju
-                                                //da se mogu dodati, npr. za component su to filteri
+        public void questionArrayPrompt(dynamic Question)
         {
-            if (Command == "component")
+            var First = true;
+            ArrayList Filters = new ArrayList();
+            var Filter = "";
+            var i = 0;
+            JArray QuestionHelper = Enums[(Question.Key).ToString()] as JArray;
+            ArrayList Questions = new ArrayList(QuestionHelper.ToObject<ArrayList>());
+            do
             {
-                Model = Component.AddDynamic(Model);
+                if (!First)
+                {
+                    Console.WriteLine(Question.Value);
+                }
+                else
+                {
+                    First = false;
+                }
+
+                Filter = Console.ReadLine();
+                Console.WriteLine("");
+                if (!string.IsNullOrEmpty(Filter))
+                {
+                    IDictionary<string, Object> Tip = new ExpandoObject() as IDictionary<string, object>;
+                    Tip.TryAdd("name", Filter);
+                    Console.CursorVisible = false;
+                    foreach (JObject EnumQuestion in Questions)
+                    {
+
+                        string[] options = EnumQuestion["options"].ToObject<string[]>();
+                        Console.WriteLine(EnumQuestion["question"].ToString());
+                        Menu Menu = new Menu(options);
+                        int SelectedIndex = Menu.Run();
+                        var selected = options[SelectedIndex];
+
+                        if (EnumQuestion["type"].ToString() == "int")
+                        {
+                            Tip.TryAdd(EnumQuestion["name"].ToString(), int.Parse(selected));
+                        }
+                        else
+                        {
+                            Tip.TryAdd(EnumQuestion["name"].ToString(), selected);
+                        }
+                        Console.WriteLine("");
+                    }
+
+                    Filters.Add(Tip);
+
+                }
             }
-            else if (Command == "component-list")
-            {
-                Model = ComponentList.AddDynamic(Model);
-            }
+            while (Filter != "");
+            Model[Question.Key] = Filters;
         }
+
+        
 
         public void promptAction(dynamic Question, ArrayList Required)
         {
@@ -233,7 +271,11 @@ namespace SchematicsProject
                     RequiredField = " (This field is required, if you don't provide a value, it will have the same value as the provided name)";
                 }
                 Console.WriteLine(Question.Value + RequiredField);
-                if (Enums[Question.Key] != null)
+
+                if (Types[Question.Key].ToString() == "questionArray") {
+                    questionArrayPrompt(Question);
+                }
+                else if (Enums[Question.Key] != null)
                 {
                     Console.CursorVisible = false;
                     IEnumerable EnumerableQuestions = Enums[Question.Key] as IEnumerable;
@@ -277,7 +319,7 @@ namespace SchematicsProject
             string DestinationPath = CurrentDirectory + "/";
             var Engine = new RazorLightEngineBuilder()
                   // required to have a default RazorLightProject type, but not required to create a template from string.
-                  .UseEmbeddedResourcesProject(typeof(ComponentList))
+                  .UseEmbeddedResourcesProject(typeof(Engine))
                   .UseMemoryCachingProvider()
                   .Build();
 

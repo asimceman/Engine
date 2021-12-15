@@ -27,7 +27,7 @@
     "name": {
       "type": "string",
       "description": "The name of the component.",
-      "default":  "Mirza",
+      "default": "Mirza",
       "x-prompt": "What name would you like to use for the component?"
     },
     "service": {
@@ -40,7 +40,6 @@
       "x-prompt": "This component is Standard | Dialog or nested?",
       "default": "Standard"
     },
-
     "routeMode": {
       "description": "Details mode",
       "enum": [ "Url", "Dialog", "None" ],
@@ -189,6 +188,25 @@
       "default": false,
       "description": "When true, applies lint fixes after generating the component.",
       "x-user-analytics": 15
+    },
+    "filters": {
+      "type": "questionArray",
+      "x-prompt": "Which filters does this component need (press enter or empty line to finish)",
+      "enum": [
+        {
+          "question": "Which type?",
+          "name": "filterType",
+          "type": "string",
+          "options": [ "input", "datepicker", "autocomplete", "select", "checkbox", "textarea" ]
+        },
+        {
+          "question": "Size?",
+          "name": "size",
+          "type":  "int",
+          "options": [ 2, 3, 4 ]
+        }
+
+      ]
     }
   },
   "required": [
