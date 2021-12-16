@@ -41,6 +41,8 @@ namespace SchematicsProject
             ArrayList requiredList = new ArrayList(required.ToObject<ArrayList>());
 
             InsertModel(schema);
+
+            var relativeTemplatesPath = false;
             
             Model["name"] = command[2];
             ArrayList inputtedValues = new ArrayList();
@@ -52,6 +54,8 @@ namespace SchematicsProject
                     var commandSplit = command[i].Split("-");
                     Model[commandSplit[0]] = commandSplit[1];
                     inputtedValues.Add(commandSplit[0]);
+                    if (commandSplit[0] == "templatesDirectory")
+                        relativeTemplatesPath = true;
                 }
             }
 
@@ -71,7 +75,10 @@ namespace SchematicsProject
 
             if (Model.ContainsKey("templatesDirectory"))
             {
-                templateDirectory = Model["templatesDirectory"].ToString();
+                if (!relativeTemplatesPath)
+                    templateDirectory = Model["templatesDirectory"].ToString();
+                else
+                    templateDirectory = CurrentDirectory + "/" + Model["templatesDirectory"].ToString();
                 if (!templateDirectory.EndsWith("/"))
                 {
                     templateDirectory += "/";

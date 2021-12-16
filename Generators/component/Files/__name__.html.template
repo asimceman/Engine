@@ -11,6 +11,10 @@
 	<div>@filter.size</div>
 	<div>@filter.filterType</div>
 	}
+	@if(Model.searchField)
+	{
+		<div>@Model.searchField</div>
+	}
 	@foreach (var column in Model.columns)
 	{
 	<div>@column.name</div>
