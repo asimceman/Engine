@@ -3,3 +3,5 @@
 2. create Nuget package using command: **dotnet pack**
 3. install the package using command: **dotnet tool install --global --add-source ./nupkg Kodecta.Generator.Schematics**
 4. use the project anywhere on your system using command: **SchematicsGenerator -t << generatorName >> << modelName >>**, for example: **SchematicsGenerator -t component TestName**
+
+If you want to uninstall the package, run the command: **dotnet tool uninstall -g microsoft.botsay**

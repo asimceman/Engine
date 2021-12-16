@@ -234,7 +234,7 @@ namespace SchematicsProject
                 }
 
                 Filter = Console.ReadLine();
-                Console.WriteLine("");
+                //Console.WriteLine("");
                 if (!string.IsNullOrEmpty(Filter))
                 {
                     IDictionary<string, dynamic> Tip = new ExpandoObject() as IDictionary<string, dynamic>;
@@ -279,7 +279,7 @@ namespace SchematicsProject
                 Console.CursorVisible = true;
                 string RequiredField = "";
                 if (Required.Contains(Question.Key)) {
-                    RequiredField = " (This field is required, if you don't provide a value, it will have the same value as the provided name)";
+                    RequiredField = " (This field is required)";
                 }
                 Console.WriteLine(Question.Value + RequiredField);
 
@@ -316,13 +316,25 @@ namespace SchematicsProject
                 else
                 {
                     var InputtedValue = Console.ReadLine();
-                    if (Required.Contains(Question.Key) && InputtedValue == "")
-                        Model[Question.Key] = Model["name"];
-                    if (InputtedValue != "")
+                    if (Required.Contains(Question.Key))
+                        requiredProperty(Question, InputtedValue, RequiredField);
+                    else if (InputtedValue != "")
                         Model[Question.Key] = InputtedValue;
                 }
                 Console.WriteLine("");
             }
+        }
+
+        public void requiredProperty(dynamic Question, string InputtedValue, string RequiredField) 
+        {
+            while (InputtedValue == "")
+            {
+                Console.WriteLine(Question.Value + RequiredField);
+                InputtedValue = Console.ReadLine();
+            }
+            
+            Model[Question.Key] = InputtedValue;
+
         }
 
         public async void Generate(string TemplateFile, string OutputFileName)
