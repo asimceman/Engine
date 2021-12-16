@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace SchematicsProject
         string GeneratorPath = "";
         string CurrentDirectory = "";
         string TemplatePath = "";
+        string FactoryPath = "";
 
 
         public Engine()
@@ -28,22 +30,11 @@ namespace SchematicsProject
                 CurrentDirectory = Directory.GetCurrentDirectory();
         }
 
-        public async Task InputProcces(string input)
+        public async Task InputProcces(string[] command)
         {
-            input = Regex.Replace(input, @"\s+", " ");   
-            var command = input.Split(" ");
 
             InputValidation(command);
 
-            var schema = GetSchema(command[1]);
-
-            JArray required = schema["required"] as JArray;
-            ArrayList requiredList = new ArrayList(required.ToObject<ArrayList>());
-
-            InsertModel(schema);
-
-            var relativeTemplatesPath = false;
-            
             Model["name"] = command[2];
             ArrayList inputtedValues = new ArrayList();
             inputtedValues.Add("name");
@@ -54,15 +45,16 @@ namespace SchematicsProject
                     var commandSplit = command[i].Split("-");
                     Model[commandSplit[0]] = commandSplit[1];
                     inputtedValues.Add(commandSplit[0]);
-                    if (commandSplit[0] == "templatesDirectory")
-                        relativeTemplatesPath = true;
                 }
             }
 
-            
 
+            var schema = GetSchema(command[1]);
 
+            JArray required = schema["required"] as JArray;
+            ArrayList requiredList = new ArrayList(required.ToObject<ArrayList>());
 
+            InsertModel(schema, inputtedValues);
 
             foreach (var question in Prompts)
             {
@@ -71,21 +63,7 @@ namespace SchematicsProject
                 PromptAction(question, requiredList);
             }
 
-            var templateDirectory = GeneratorPath + TemplatePath + "/";
-
-            if (Model.ContainsKey("templatesDirectory"))
-            {
-                if (!relativeTemplatesPath)
-                    templateDirectory = Model["templatesDirectory"].ToString();
-                else
-                    templateDirectory = CurrentDirectory + "/" + Model["templatesDirectory"].ToString();
-                if (!templateDirectory.EndsWith("/"))
-                {
-                    templateDirectory += "/";
-                }
-            }
-
-            GetTemplatesAndGenerate(templateDirectory);
+            GetTemplatesAndGenerate(TemplatePath);
         }
 
         public void InputValidation(dynamic command)
@@ -100,25 +78,29 @@ namespace SchematicsProject
         }
 
         public Dictionary<string, Object> GetSchema(string componentToGenerate) {
-            string collectionPath = Path.Combine(GeneratorPath, "collection.json");
 
-            JObject data = JObject.Parse(File.ReadAllText(collectionPath));
-            var schematics = data["schematics"];
-            var component = schematics[componentToGenerate];
-
-            if (component == null)
+            if (Model.ContainsKey("templatesDirectory"))
             {
-                throw new Exception("Schematics doesn't exist");
+                if(Model["templatesDirectory"].ToString() != "")
+                    FactoryPath = CurrentDirectory + "/" + Model["templatesDirectory"] + "/" + componentToGenerate;
+                else
+                    FactoryPath = CurrentDirectory + "/"  + componentToGenerate;
             }
-            var factoryPath = schematics[componentToGenerate]["factory"];
-            TemplatePath = factoryPath + "./Files";
+            else
+            {
+                if(File.Exists(CurrentDirectory + "/" + componentToGenerate + "/schema.json"))
+                    FactoryPath = CurrentDirectory + "/" + componentToGenerate;
+                else
+                    FactoryPath = GeneratorPath + "/Generators/" + componentToGenerate;
+            }
+            TemplatePath = FactoryPath + "./Files";
 
-            var schemaPath = Path.Combine(GeneratorPath, component["schema"].ToString());
+            var schemaPath = Path.Combine(FactoryPath + "/schema.json");
             JObject schema = JObject.Parse(File.ReadAllText(schemaPath)); //getting json for wanted object
             return schema.ToObject<Dictionary<string, Object>>();
         }
 
-        public void InsertModel(dynamic schema)
+        public void InsertModel(dynamic schema, ArrayList inputtedValues)
         {
             if (schema.ContainsKey("properties"))
             {
@@ -126,6 +108,8 @@ namespace SchematicsProject
                 foreach (JProperty property in (JToken)properties)
                 {
                     var field = property.Path;
+                    if (inputtedValues.Contains(field))
+                        continue;
                     if (property.Value["type"].ToString() == "boolean")
                     {
                         bool boolValue = false;
@@ -149,7 +133,7 @@ namespace SchematicsProject
             foreach (string TemplateFile in GetFiles(templateDirectory))
             {
                 var templateName = TemplateFile.Replace(templateDirectory, "");
-                templateName = templateName.Replace(@"\", "/");
+                templateName = templateName.Replace(@"\", "");
                 //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
                 string pattern = @"__(.*?)__";
                 Regex regex = new Regex(pattern);
@@ -357,8 +341,9 @@ namespace SchematicsProject
             }
 
             string result = await engine.CompileRenderStringAsync("templateKey2", template, Model);
-            
-            using (StreamWriter outputFile = new StreamWriter(System.IO.Path.Combine(destinationPath, outputFileName)))
+            var destination = System.IO.Path.Combine(destinationPath, outputFileName);
+
+            using (StreamWriter outputFile = new StreamWriter(destination))
             {
                 await outputFile.WriteAsync(result);
                 Console.WriteLine("Successfully generated " + outputFileName);

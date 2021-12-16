@@ -22,19 +22,22 @@ namespace SchematicsProject
 
             string input = CreateInput(args);
 
-            if (args.Length == 0) {
-                Console.WriteLine("Input component");
-                input = Console.ReadLine();
-            }
 
             var engine = new Engine();
             try
             {
-                await engine.InputProcces(input);
+                await engine.InputProcces(args);
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message + " - valid input is \"-t <nameOfSchematics> <nameForGeneratedFile>\" ");
+            }
+            catch (FileNotFoundException e) {
+                Console.WriteLine("File not found!");
+            }
+            catch(DirectoryNotFoundException)
+            {
+                Console.WriteLine("File not found!");
             }
             catch (Exception e)
             {
