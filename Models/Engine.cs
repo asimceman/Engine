@@ -35,7 +35,7 @@ namespace SchematicsProject
 
             InputValidation(command);
 
-            var schema = getSchema(command[1]);
+            var schema = GetSchema(command[1]);
 
             JArray required = schema["required"] as JArray;
             ArrayList requiredList = new ArrayList(required.ToObject<ArrayList>());
@@ -64,7 +64,7 @@ namespace SchematicsProject
             {
                 if (inputtedValues.Contains(question.Key))
                     continue;
-                promptAction(question, requiredList);
+                PromptAction(question, requiredList);
             }
 
             var templateDirectory = GeneratorPath + TemplatePath + "/";
@@ -92,7 +92,7 @@ namespace SchematicsProject
                 throw new ArgumentException("invalid input");
         }
 
-        public Dictionary<string, Object> getSchema(string componentToGenerate) {
+        public Dictionary<string, Object> GetSchema(string componentToGenerate) {
             string collectionPath = Path.Combine(GeneratorPath, "collection.json");
 
             JObject data = JObject.Parse(File.ReadAllText(collectionPath));
@@ -139,9 +139,9 @@ namespace SchematicsProject
 
         public void GetTemplatesAndGenerate(string templateDirectory)
         {
-            foreach (string templateFile in GetFiles(templateDirectory))
+            foreach (string TemplateFile in GetFiles(templateDirectory))
             {
-                var templateName = templateFile.Replace(templateDirectory, "");
+                var templateName = TemplateFile.Replace(templateDirectory, "");
                 templateName = templateName.Replace(@"\", "/");
                 //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
                 string pattern = @"__(.*?)__";
@@ -154,7 +154,7 @@ namespace SchematicsProject
                 int index = templateName.LastIndexOf(".");
                 if (index >= 0)
                     templateName = templateName.Substring(0, index);
-                Generate(templateFile, templateName);
+                Generate(TemplateFile, templateName);
             }
         }
 
@@ -200,7 +200,7 @@ namespace SchematicsProject
             }
         }
 
-        public dynamic determineVariableType(dynamic enumQuestion, string selected) 
+        public dynamic DetermineVariableType(dynamic enumQuestion, string selected) 
         {
             if (enumQuestion["type"].ToString() == "int")
             {
@@ -209,7 +209,7 @@ namespace SchematicsProject
             return selected;
         }
 
-        public void questionArrayPrompt(dynamic question)
+        public void QuestionArrayPrompt(dynamic question)
         {
             var first = true;
             ArrayList filters = new ArrayList();
@@ -243,14 +243,14 @@ namespace SchematicsProject
                             int selectedIndex = menu.Run();
                             var selected = options[selectedIndex];
                             
-                            tip.Add(enumQuestion["name"].ToString(), determineVariableType(enumQuestion, selected));
+                            tip.Add(enumQuestion["name"].ToString(), DetermineVariableType(enumQuestion, selected));
                             
                         }
                         else
                         {
                             Console.WriteLine(enumQuestion["question"].ToString());
                             var inputtedValue = Console.ReadLine();
-                            tip.Add(enumQuestion["name"].ToString(), determineVariableType(enumQuestion, inputtedValue));
+                            tip.Add(enumQuestion["name"].ToString(), DetermineVariableType(enumQuestion, inputtedValue));
                         }
                         Console.WriteLine("");
                     }
@@ -265,7 +265,7 @@ namespace SchematicsProject
 
         
 
-        public void promptAction(dynamic question, ArrayList required)
+        public void PromptAction(dynamic question, ArrayList required)
         {
             if (question.Value != null)
             {
@@ -277,7 +277,7 @@ namespace SchematicsProject
                 Console.WriteLine(question.Value + requiredField);
 
                 if (Types[question.Key].ToString() == "questionArray") {
-                    questionArrayPrompt(question);
+                    QuestionArrayPrompt(question);
                 }
                 else if (Enums[question.Key] != null)
                 {
@@ -310,7 +310,7 @@ namespace SchematicsProject
                 {
                     var inputtedValue = Console.ReadLine();
                     if (required.Contains(question.Key))
-                        requiredProperty(question, inputtedValue, requiredField);
+                        RequiredProperty(question, inputtedValue, requiredField);
                     else if (inputtedValue != "")
                         Model[question.Key] = inputtedValue;
                 }
@@ -318,7 +318,7 @@ namespace SchematicsProject
             }
         }
 
-        public void requiredProperty(dynamic question, string inputtedValue, string requiredField) 
+        public void RequiredProperty(dynamic question, string inputtedValue, string requiredField) 
         {
             while (inputtedValue == "")
             {
