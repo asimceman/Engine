@@ -6,13 +6,13 @@ namespace SchematicsProject
 {
     public class Menu
     {
-        private int SelectedIndex;
+        private int selectedIndex;
         private string[] Options;
         private bool First = true;
-        public Menu(string[] Options)
+        public Menu(string[] options)
         {
-            this.Options = Options;
-            SelectedIndex = 0;
+            this.Options = options;
+            selectedIndex = 0;
         }
 
         public void DisplayOptions()
@@ -30,55 +30,55 @@ namespace SchematicsProject
                 {
                     ClearCurrentConsoleLine();
                 }
-                string CurrentOption = Options[i];
-                string Prefix;
+                string currentOption = Options[i];
+                string prefix;
 
-                if (i == SelectedIndex)
+                if (i == selectedIndex)
                 {
-                    Prefix = ">";
+                    prefix = ">";
                 }
                 else
                 {
-                    Prefix = "";
+                    prefix = "";
                 }
-                Console.WriteLine($"{Prefix}{CurrentOption}");
+                Console.WriteLine($"{prefix}{currentOption}");
             }
             First = false;
         }
 
         public static void ClearCurrentConsoleLine()
         {
-            int CurrentLineCursor = Console.CursorTop;
+            int currentLineCursor = Console.CursorTop;
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = 0; i < Console.WindowWidth; i++)
                 Console.Write(" ");
-            Console.SetCursorPosition(0, CurrentLineCursor);
+            Console.SetCursorPosition(0, currentLineCursor);
         }
 
 
         public int Run()
         {
-            ConsoleKey KeyPressed;
+            ConsoleKey keyPressed;
             First = true;
             do
             {
                 DisplayOptions();
                 First = false;
-                ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
-                KeyPressed = KeyInfo.Key;
-                if (KeyPressed == ConsoleKey.UpArrow)
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
+                if (keyPressed == ConsoleKey.UpArrow)
                 {
-                    if(SelectedIndex!=0)
-                        SelectedIndex--;
+                    if(selectedIndex!=0)
+                        selectedIndex--;
                 }
-                else if (KeyPressed == ConsoleKey.DownArrow)
+                else if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    if(SelectedIndex!=Options.Length-1)
-                        SelectedIndex++;
+                    if(selectedIndex!=Options.Length-1)
+                        selectedIndex++;
                 }
             }
-            while (KeyPressed != ConsoleKey.Enter);
-            return SelectedIndex;
+            while (keyPressed != ConsoleKey.Enter);
+            return selectedIndex;
         }
     }
 }

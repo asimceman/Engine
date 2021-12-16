@@ -20,17 +20,17 @@ namespace SchematicsProject
 
             Console.CursorVisible = true;
 
-            string Input = CreateInput(args);
+            string input = CreateInput(args);
 
             if (args.Length == 0) {
                 Console.WriteLine("Input component");
-                Input = Console.ReadLine();
+                input = Console.ReadLine();
             }
 
-            var Engine = new Engine();
+            var engine = new Engine();
             try
             {
-                await Engine.InputProcces(Input);
+                await engine.InputProcces(input);
             }
             catch (ArgumentException e)
             {
@@ -50,21 +50,21 @@ namespace SchematicsProject
 
         public static string CreateInput(string[] args)
         {
-            string Input = "";
-            bool First = true;
-            foreach (string Argument in args)
+            string input = "";
+            bool first = true;
+            foreach (string argument in args)
             {
-                if (First)
+                if (first)
                 {
-                    Input += Argument;
-                    First = false;
+                    input += argument;
+                    first = false;
                 }
                 else
                 {
-                    Input += " " + Argument;
+                    input += " " + argument;
                 }
             }
-            return Input;
+            return input;
         }
 
         
