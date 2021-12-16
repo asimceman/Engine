@@ -38,13 +38,22 @@ namespace SchematicsProject
             Model["name"] = command[2];
             ArrayList inputtedValues = new ArrayList();
             inputtedValues.Add("name");
+            var first = "";
             if (command.Length > 3)
             {
                 for (var i = 3; i < command.Length; i++)
                 {
-                    var commandSplit = command[i].Split("-");
-                    Model[commandSplit[0]] = commandSplit[1];
-                    inputtedValues.Add(commandSplit[0]);
+                    if (i % 2 != 0)
+                    {
+                        first = command[i].Replace("-", "");
+                    }
+                    else
+                    {
+                        Model[first] = command[i];
+                        Console.WriteLine("First: " + first);
+                        Console.WriteLine("Second: " + command[i]);
+                    }
+                    inputtedValues.Add(first);
                 }
             }
 
