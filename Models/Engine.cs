@@ -50,8 +50,9 @@ namespace SchematicsProject
                     else
                     {
                         Model[first] = command[i];
+                        inputtedValues.Add(first);
                     }
-                    inputtedValues.Add(first);
+                    
                 }
             }
 
