@@ -50,8 +50,6 @@ namespace SchematicsProject
                     else
                     {
                         Model[first] = command[i];
-                        Console.WriteLine("First: " + first);
-                        Console.WriteLine("Second: " + command[i]);
                     }
                     inputtedValues.Add(first);
                 }
