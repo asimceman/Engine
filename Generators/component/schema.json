@@ -143,25 +143,6 @@
       "default": false,
       "description": "When true, applies lint fixes after generating the component.",
       "x-user-analytics": 15
-    },
-    "filters": {
-      "type": "questionArray",
-      "x-prompt": "Which filters does this component need (press enter or empty line to finish)",
-      "enum": [
-        {
-          "question": "Which type?",
-          "name": "type",
-          "type": "string",
-          "options": [ "input", "datepicker", "autocomplete", "select", "checkbox", "textarea" ]
-        },
-        {
-          "question": "Size?",
-          "name": "size",
-          "type": "int",
-          "options": [ 2, 3, 4 ]
-        }
-
-      ]
     }
   },
   "required": [
