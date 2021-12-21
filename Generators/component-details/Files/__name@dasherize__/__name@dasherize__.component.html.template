@@ -1,0 +1,72 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+
+@if (Model.isDialog)
+{<h2 mat-dialog-title>{{ 'Views.@classify(Model.name)' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+    <ms-spinner [isLoading]="loading"></ms-spinner>
+    <h3>{{ 'Views.@classify(Model.name)' | translate }}</h3>
+    <form [formGroup]="form" #formControl="ngForm" (ngSubmit)="submit($event)">
+        <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{ 'Action.cancel' | translate }}</button>
+    <ng-container *ngFor="let action of actions">
+        <button [disabled]="loading" [color]="action.color" *ngIf="action.visible && !action.override"
+                mat-raised-button
+                (click)="formControl.onSubmit({$event: $event, action: action.name})">
+            {{ action.name | translate }}
+        </button>
+    </ng-container>
+</mat-dialog-actions>}
+
+@if (!Model.isDialog)
+{
+    <form autocomplete="off" [formGroup]="form" #formControl="ngForm" (ngSubmit)="submit($event)">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{ 'Views.@classify(Model.name)' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <ms-spinner [isLoading]="loading"></ms-spinner>
+                @if (!Model.isTabbed)
+                {
+                    <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+                }
+                else
+                {
+                    <mat-tab-group>
+                        <mat-tab *ngFor="let tab of tabs;let index = index;" label="{{tab.name | translate}}"
+                                 [disabled]="index !== 0 && !form.at(index - 1)?.valid">
+                            <div class="row mrgn-all-md">
+                                <div class="col-sm-12">
+                                    <formly-form [form]="form.at(index)" [model]="model" [fields]="tab.fields">
+                                    </formly-form>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                }
+            </mat-card-content>
+            <mat-card-actions class="pull-right">
+                <ng-container *ngFor="let action of actions">
+                    <button [disabled]="loading" [color]="action.color" *ngIf="action.visible && !action.override"
+                            mat-raised-button
+                            (click)="formControl.onSubmit({$event: $event, action: action.name})">
+                        {{ action.name | translate }}
+                    </button>
+                </ng-container>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+}

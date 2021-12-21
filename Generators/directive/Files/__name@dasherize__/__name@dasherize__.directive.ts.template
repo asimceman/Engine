@@ -1,0 +1,21 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+import { Directive } from '@@angular/core';
+
+@@Directive({
+  selector: '[@Model.selector]'
+})
+export class @classify(Model.name)Directive {
+
+  constructor() { }
+
+}

@@ -1,0 +1,26 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+import { NgModule } from '@@angular/core';
+import { Routes, RouterModule } from '@@angular/router';
+@if (Model.lazyRoute)
+{<text>
+    import { @classify(Model.name)Component }
+    from './@(dasherize(Model.name)).component';
+</text>}
+
+const routes: Routes = [@if (Model.lazyRoute) {<text> { path: '', component: @classify(Model.name)Component } </text>}];
+
+@@NgModule({
+  imports:[RouterModule.for@routingScope(routes)],
+  exports: [RouterModule]
+})
+export class @classify(Model.name)RoutingModule { }

@@ -1,0 +1,320 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+    public string camelize(string camelized)
+    {
+        return camelized.Camelize();
+    }
+}
+import
+{ Component, ViewChild, OnDestroy, AfterViewInit, Input, OnInit @if (Model.viewEncapsulation != null)
+{<text>, ViewEncapsulation</text>} @if (Model.changeDetection != "Default")
+{<text>, ChangeDetectionStrategy</text>} }
+from '@@angular/core';
+@if (Model.isDialog)
+{<text> import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
+import
+{ Location }
+from '@@angular/common';
+import
+{ ActivatedRoute, Router}
+from '@@angular/router';
+import
+{ FormlyFieldConfig}
+from '@@ngx-formly/core';
+import
+{ FormGroup}
+from '@@angular/forms';
+import
+{ Subject}
+from 'rxjs';
+@if (!Model.isDialog)
+{<text> import { PageTitleService } from 'app/shared/services/page-title.service'; </text>}
+
+@@Component({
+@if (!Model.skipSelector)
+{<text>
+        selector: '@Model.selector',</text>}
+@if (Model.inlineTemplate)
+{<text>
+        template: `
+        < p >
+        @dasherize(Model.name) works!
+        </ p >
+        `,</text>}
+else
+{<text>
+templateUrl: './@(dasherize(Model.name)).component.html',</text>}
+@if (Model.inlineStyle)
+{<text>
+styles:[]</text>}
+else
+{<text>
+styleUrls:['./@(dasherize(Model.name)).component.@Model.style']</text>}
+@if (Model.viewEncapsulation!=null)
+{<text>,
+encapsulation: ViewEncapsulation.@Model.viewEncapsulation</text>}
+@if (Model.changeDetection != "Default")
+{<text>,
+changeDetection: ChangeDetectionStrategy.@Model.changeDetection</text>}
+})
+export class @classify(Model.name)Component implements OnInit, AfterViewInit, OnDestroy {
+      // REGION:Common Variables
+      loading: boolean = true;
+onDestroy$ = new Subject<void>
+    ();
+    @@Input()
+    model: any = { }; // empty form. Override here if necessary
+    @@Input()
+    id: any = 'new';
+    additionalData = { includeList:[]};
+    actions = [
+    @if (!Model.isDialog) {<text> { name: 'Action.cancel', visible: true, method: () => { this.location.back(); }, color: "primary"},</text>}
+    { name: 'Action.save', visible: true, method: async () => { await this.save(); }, color: "accent"}
+    ];
+    @if (Model.parentId!=null && Model.parentId != "")
+    {<text>
+        @@Input()@Model.parentId = null;
+</text>}
+    fields: FormlyFieldConfig[] = [
+    {
+    fieldGroupClassName: 'row',
+    fieldGroup:[
+    @foreach (var column in Model.columns) {<text>
+            {
+            className: 'col-sm-@column.size',
+            type: '@column.type',
+            key: '@column.name',
+            templateOptions:
+            {
+            translate: true,
+            label: '@(Model.name + '.' + column.name)',
+            @if (column.type == "textarea")
+            {<text>
+                    rows: 3,
+            </text>}
+        else if (column.type == "autocomplete")
+       {<text>
+            getByFilter: async (id, text) =>
+            {
+            const result = await this.@(camelize(column.service)).getPage({
+id: id,
+@column.filterField: text
+});
+            return result.resultList;
+            },
+    </text>}
+else if (column.type == "repeat")
+       {<text>
+            allowRemove: true,
+            allowAdd: true,</text>}
+            },@if (column.type == "repeat")
+{<text>
+        fieldArray:
+        {
+        fieldGroup:
+        [
+        {
+        fieldGroupClassName: 'row',
+        fieldGroup:[
+        @foreach (var columnInner in Model.columns) {<text>
+                {
+                className: 'col-sm-@columnInner.size',
+                type: '@columnInner.type',
+                key: '@columnInner.name',
+                templateOptions:
+                {
+                translate: true,
+                label: '@(Model.name + '.' + columnInner.name)',
+                @if (columnInner.type == "textarea")
+                {<text>
+                        rows: 3,
+                </text>}
+            else if (columnInner.type == "autocomplete")
+           {<text>
+                getByFilter: async (id, text) =>
+                {
+                const result = await this.@(camelize(columnInner.service)).getPage({
+id: id,
+@columnInner.filterField: text
+});
+                return result.resultList;
+                },
+        </text>}
+    else if (columnInner.type == "repeat")
+           {<text>
+                allowRemove: true,
+                allowAdd: true,</text>}
+    },@if (columnInner.type == "repeat")
+    {<text>
+            fieldArray:
+            {
+            fieldGroup:
+            [
+            {
+            fieldGroupClassName: 'row',
+            fieldGroup:
+            [
+            {
+            }
+            ]
+            }]
+            },
+    </text>}
+    },</text>}
+        ]
+        }]
+        },
+</text>}
+            },
+    </text>}
+    ]
+    }];
+    @if (!Model.isTabbed)
+    {<text>
+        form = new FormGroup({ });
+    </text>}
+    else
+    {<text>
+        //TODO: Add additional fields config and add it to tabs array.
+        tabs = [{ name: 'REPLACE_ME', fields: this.fields}]
+form = new FormArray(this.tabs.map(() => new FormGroup({ })));
+    </text>}
+
+
+    constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text> public @camelize(additionalService.name): @classify(additionalService.name),</text>}
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location,
+    @if (!Model.isDialog) {<text>private pageTitleService: PageTitleService,</text>}
+    @if(Model.isDialog) {<text>public dialogRef: MatDialogRef< @classify(Model.name)Component >
+    ,
+    @@Inject(MAT_DIALOG_DATA) public data: any,</text>}) {
+    }
+
+    async ngOnInit()
+    {
+    await this.init();
+    }
+
+    private async init()
+    {
+    @if(Model.parentId!=null && Model.parentId != "") {<text>
+                this.@Model.parentId = this.data.@Model.parentId;
+            </text>}
+    @if(Model.isDialog) {<text>
+                if (this.data.id !== 'new')
+                {
+            this.id = this.data.id;
+            this.model = (await this.mainService.get(this.id, this.additionalData)); // get model if requested
+            this.loading = false;
+        }
+        </text>}
+    @if(!Model.isDialog && Model.isIdFromRoute) {<text>
+                this.route.params.subscribe(async params => {
+                    this.id = params['id'];
+                    if (this.id === 'new')
+                    {
+            this.pageTitleService.setTitle('Views.' + '@classify(Model.name)'); // Change this by loaded model if needed
+        }
+                    else
+                    {
+            this.model = (await this.mainService.get(this.id, this.additionalData)); // get model if requested
+            throw new Error("Populate title correctly");
+            this.pageTitleService.setTitle('Views.' + '@classify(Model.name)'); // Change this by loaded model if needed
+        }
+                    this.loading = false;
+        });</text>} else if (!Model.isDialog)
+{<text>
+      if (this.id !== 'new')
+      {
+          this.model = (await this.mainService.get(this.id, this.additionalData)); // get model if requested
+          this.loading = false;
+      }
+</text>}
+
+        }
+
+
+        ngAfterViewInit(): void
+        {
+
+        }
+
+        async save()
+        {
+        const request: any = this.model;
+        @if (Model.parentId!=null && Model.parentId != "")
+{<text>
+            request.@Model.parentId = this.@Model.parentId;
+</text>}
+        //override request here
+        if (this.id === 'new')
+        {
+        const result:any = (await this.mainService.insert(request));
+        this.id = result.id;
+        @if (Model.isDialog)
+{<text>
+            this.dialogRef.close(result);
+</text>}
+        @if (Model.isIdFromRoute)
+{<text>
+            let url = this.router.url;
+            url = url.replace('new', this.id);
+            this.location.replaceState(url);
+</text>}
+        }
+        else
+        {
+        const result:any = (await this.mainService.update(this.id, request));
+        @if (Model.isDialog)
+{<text>
+            this.dialogRef.close(result);
+</text>}
+        }
+        }
+
+        async submit(e)
+        {
+        if (this.form.valid || e.action == 'Action.cancel')
+        {
+        this.loading = true;
+        try
+        {
+        await this.actions.find(x => x.name == e.action).method();
+        await this.manageActionVisibility();
+        }
+        catch (e)
+        {
+        throw e;
+        }
+        finally
+        {
+        this.loading = false;
+        }
+        }
+        }
+
+        async manageActionVisibility()
+        {
+        if (this.id != 'new')
+        {
+        // example
+        //const action = this.actions.find(x => x.name == "delete");
+        //action.visible = false; //todo permissions.
+        }
+        }
+
+        ngOnDestroy(): void
+        {
+        this.onDestroy$.next();
+        this.onDestroy$.complete();
+        }
+        }

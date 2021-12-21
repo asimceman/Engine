@@ -1,0 +1,35 @@
+@using Humanizer;
+@functions{
+
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+
+import { Injectable } from '@@angular/core';
+@if (Model.mode == "read")
+{<text>import { BaseReadService } from 'app/shared/services/base-read.service';</text>}
+@if (Model.mode == "crud")
+{<text>import { BaseCRUDService } from 'app/shared/services/base-crud.service';</text>
+        <text>import {MatDialog} from '@@angular/material'</text>;
+}
+@@Injectable({
+  providedIn: 'root'
+})
+export class @classify(Model.name)Service @if (Model.mode == "read")
+{<text> extends BaseReadService </text>} @if (Model.mode == "crud")
+{<text> extends BaseCRUDService </text>} {
+    // NOTE: Change this part to suit your needs
+    getResourceName() {
+        return '@Model.resource';
+        }
+
+        getBasePath() {
+        return '@Model.basePath';
+        }
+        }

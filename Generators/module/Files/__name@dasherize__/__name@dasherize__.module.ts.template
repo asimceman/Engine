@@ -1,0 +1,46 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+import { NgModule } from '@@angular/core';@if (Model.commonModule)
+{<text>
+        import { CommonModule }
+        from '@@angular/common';
+</text>}@if (Model.lazyRouteWithoutRouteModule)
+{<text>
+        import { Routes, RouterModule }
+        from '@@angular/router';
+</text>}
+@if (Model.routing || Model.lazyRouteWithRouteModule)
+{<text>
+        import { @classify(Model.name)RoutingModule }
+        from './@dasherize(Model.name)-routing.module';
+</text>}
+@if (Model.lazyRouteWithoutRouteModule)
+{<text>
+        const routes: Routes = [
+        { path: '', component: @classify(Model.name)Component }
+        ];
+</text>}
+
+@@NgModule({
+  declarations:[],
+  imports:
+    [@if (Model.commonModule)
+{<text>
+        CommonModule@(Model.routing || Model.lazyRouteWithRouteModule ? ',' : '')</text>}
+    @if (Model.routing || Model.lazyRouteWithRouteModule)
+    {<text>
+            @classify(Model.name)RoutingModule}@(Model.lazyRouteWithoutRouteModule ? ',' : '')@if (Model.lazyRouteWithoutRouteModule)
+    {<text>
+            RouterModule.forChild(routes)</text>}
+                ]
+            })
+    export class @classify(Model.name)Module { }

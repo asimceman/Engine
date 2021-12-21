@@ -11,6 +11,7 @@ namespace SchematicsProject
     {
         public static async Task Main(string[] args)
         {
+            //RazorConversor.ConvertAll("C:\\Users\\User\\Desktop\\NovaProba");
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
@@ -22,6 +23,8 @@ namespace SchematicsProject
 
             string input = CreateInput(args);
 
+            string[] input2 = new string[] { "-t", "interface", "asimCeman" };
+
 
             var engine = new Engine();
             try
@@ -32,10 +35,11 @@ namespace SchematicsProject
             {
                 Console.WriteLine(e.Message + " - valid input is \"-t <nameOfSchematics> <nameForGeneratedFile>\" ");
             }
-            catch (FileNotFoundException e) {
+            catch (FileNotFoundException e)
+            {
                 Console.WriteLine("File not found!");
             }
-            catch(DirectoryNotFoundException)
+            catch (DirectoryNotFoundException)
             {
                 Console.WriteLine("File not found!");
             }
@@ -43,7 +47,7 @@ namespace SchematicsProject
             {
                 Console.WriteLine(e.Message);
             }
-            
+
         }
         private static void ConfigureServices(IServiceCollection services)
         {

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Humanizer;
+using Newtonsoft.Json.Linq;
 using RazorLight;
 using System;
 using System.Collections;
@@ -135,18 +136,59 @@ namespace SchematicsProject
                 var templateName = TemplateFile.Replace(templateDirectory, "");
                 templateName = templateName.Replace(@"\", "");
                 //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
-                string pattern = @"__(.*?)__";
-                Regex regex = new Regex(pattern);
-                foreach (Match match in Regex.Matches(templateName, pattern))
-                {
-                    templateName = regex.Replace(templateName, Model[match.Groups[1].Value].ToString(), 1);
-                }
+                templateName = GenerateName(templateName);
 
                 int index = templateName.LastIndexOf(".");
                 if (index >= 0)
                     templateName = templateName.Substring(0, index);
                 Generate(TemplateFile, templateName);
             }
+        }
+
+        public dynamic GenerateName(dynamic templateName)
+        {
+            string pattern = @"__(.*?)__";
+            Regex regex = new Regex(pattern);
+            var dasherizeRegex = new Regex("@dasherize");
+            var classifyRegex = new Regex("@classify");
+            foreach (Match match in Regex.Matches(templateName, pattern))
+            {
+                bool dasherize = false;
+                bool classify = false;
+                if (templateName.Contains("@"))
+                {
+                    var split = templateName.Split("@");
+                    if (split[1].ToLower().Contains("dasherize"))
+                    {
+                        dasherize = true;
+                    }
+                    else if (split[1].ToLower().Contains("classify"))
+                    {
+                        classify = true;
+                    }
+                }
+                string change = match.Groups[1].Value;
+
+                if (dasherize)
+                {
+                    change = dasherizeRegex.Replace(change, "", 1);
+                    templateName = regex.Replace(templateName, Model[change].ToString().Underscore().Dasherize(), 1);
+                }
+                //templateName = regex.Replace(templateName, Model[match.Groups[1].Value.Replace("@dasherize", "").Dasherize()].ToString(), 1);
+                else if (classify)
+                {
+                    change = classifyRegex.Replace(change, "", 1);
+                    templateName = regex.Replace(templateName, Model[change].ToString().Pascalize(), 1);
+                }
+                else
+                {
+                    templateName = regex.Replace(templateName, Model[change].ToString(), 1);
+                }
+
+
+
+            }
+            return templateName;
         }
 
         public IEnumerable<string> GetFiles(string path)
@@ -162,6 +204,7 @@ namespace SchematicsProject
                     foreach (string subDir in Directory.GetDirectories(path))
                     {
                         var directoryInsideTemplates = subDir.Replace(initialPath, "");
+                        directoryInsideTemplates = GenerateName(directoryInsideTemplates);
                         var placeToCreateDirectory = CurrentDirectory + "/" + directoryInsideTemplates;
                         System.IO.Directory.CreateDirectory(placeToCreateDirectory);
 
@@ -206,7 +249,12 @@ namespace SchematicsProject
             ArrayList filters = new ArrayList();
             var filter = "";
             JArray questionHelper = Enums[(question.Key).ToString()] as JArray;
-            ArrayList questions = new ArrayList(questionHelper.ToObject<ArrayList>());
+            ArrayList questions = new ArrayList();
+            if (questionHelper != null)
+            {
+                questions = questionHelper.ToObject<ArrayList>();
+            }
+                
             do
             {
                 if (!first)
@@ -251,7 +299,7 @@ namespace SchematicsProject
                 }
             }
             while (filter != "");
-            Model[question.Key] = filters;
+            Model[question.Key] = (System.Collections.IList)filters;
         }
 
         

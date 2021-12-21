@@ -1,0 +1,23 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed){
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+
+import { TestBed } from '@@angular/core/testing';
+
+import { @classify(Model.name)Service } from './@(dasherize(Model.name)).service';
+
+describe('@classify(Model.name)Service', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
+
+  it('should be created', () => {
+    const service: @classify(Model.name)Service = TestBed.get(@classify(Model.name)Service);
+    expect(service).toBeTruthy();
+  });
+});

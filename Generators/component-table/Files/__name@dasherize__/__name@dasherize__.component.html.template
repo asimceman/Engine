@@ -1,0 +1,222 @@
+@using Humanizer;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Collections;
+@using System;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+@if (Model.mode == "Dialog")
+{<h2 mat-dialog-title>{{ 'Views.@classify(Model.name)' | translate }}</h2>
+}
+<mat-dialog-content class="mat-typography">
+
+
+    <div class="container-list" (keydown.control.backspace)="clear()" (keyup.enter)="search(true)" tabindex="0">
+        @if (Model.searchField)
+        {
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col col-sm-10">
+                            <div>
+                                <form autocomplete="off" [formGroup]="form">
+                                    <formly-form [form]="form" [fields]="fields" [model]="searchObject"></formly-form>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col col-sm-2 text-center">
+                            <button (click)="search(true)" mat-mini-fab color="primary" aria-label="Search">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                            <button (click)="details({id: 'new'})" mat-mini-fab aria-label="Add">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        }
+        @if (Model.searchField)
+        {
+            <mat-card *ngIf="isFilterDescriptionShown">
+                <ms-spinner [isLoading]="isLoading"></ms-spinner>
+                <mat-card-header>
+                    <div mat-card-avatar>
+                        <mat-icon role="img" aria-hidden="true">find_in_page</mat-icon>
+                    </div>
+                    <mat-card-title>{{'General.SearchFilterDescriptionTitle' | translate}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p class="search-filter-description-info-panel">
+                        {{'General.SearchFilterDescription' | translate}}
+                    </p>
+                </mat-card-content>
+            </mat-card>}
+        <mat-card [hidden]="@if(Model.searchField) {<text> isFilterDescriptionShown || </text>}searchResult?.resultList?.length > 0">
+            <mat-card-header>
+                <div mat-card-avatar>
+                    <mat-icon role="img" aria-hidden="true">cloud_off</mat-icon>
+                </div>
+                <mat-card-title>{{'General.SearchNoResultTitle' | translate}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    {{'General.SearchNoResultDescription' | translate}}
+                </p>
+            </mat-card-content>
+        </mat-card>
+        @if (Model.viewMode == "Table")
+        {<mat-card [hidden]="@if(Model.searchField) {<text> isFilterDescriptionShown || </text>}searchResult?.resultList?.length === 0">
+                <mat-card-content>
+                    <ms-spinner [isLoading]="isLoading"></ms-spinner>
+                    <div class="row">
+                        <div class="col col-sm-12">
+                            <table mat-table matSort [dataSource]="searchResult?.resultList">
+                                @foreach (var column in Model.columns)
+                                {
+                                    <ng-container matColumnDef="@column.name">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef> {{'@(Model.name + '.' + column.name)' | translate }} </th>
+                                        <td mat-cell *matCellDef="let element" appCellLocalizer="{{'@(Model.name + '.' + column.name)' | translate }}">
+                                            {{element.@(column.name).replace('.', "?.")@if (column.type == "date")
+                                            {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                            {<text> | number:'1.2-2' } </text>}}
+                                        </td>
+                                    </ng-container>
+                                }
+                                @if (Model.hasContextMenu)
+                                {
+                                    <ng-container matColumnDef="..." [stickyEnd]="true">
+                                        <th mat-header-cell mat-sort-header *matHeaderCellDef> </th>
+                                        <td style="text-align: right" mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                                            <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{data: element}">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                }
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row (click)="details(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                            <mat-paginator [length]="searchResult?.count" [pageIndex]="searchObject?.page"
+                                           [pageSize]="searchObject?.pageSize" [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>}
+        @if (Model.viewMode == "Cards")
+        {
+            <div class="row">
+                <ms-spinner [isLoading]="isLoading"></ms-spinner>
+                <div [hidden]="isFilterDescriptionShown || searchResult?.resultList?.length === 0"
+                     *ngFor="let item of searchResult?.resultList"
+                     class="col col-lg-4 col-md-6 col-sm-12">
+                    <mat-card>
+                        <mat-card-header>
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "avatar"))
+                            {
+                                <div mat-card-avatar><mat-icon role="img" aria-hidden="true">{{item.@column.name }}</mat-icon></div>
+                            }
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "title"))
+                            {
+                                <mat-card-title>
+                                    {{item.@column.name@if (column.type == "date")
+                                    {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                    {<text> | number:'1.2-2' </text>} }}
+                                </mat-card-title>
+                            }
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "subtitle"))
+                            {
+                                <mat-card-subtitle>
+                                    {{item.@column.name@if (column.type == "date")
+                                    {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                    {<text> | number:'1.2-2' </text>} }}
+                                </mat-card-subtitle>
+                            }
+                        </mat-card-header>
+                        <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+                        <mat-card-content>
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "content"))
+                            {
+                                <p>
+                                    {{item.@column.name@if (column.type == "date")
+                                    {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                    {<text> | number:'1.2-2' </text>} }}
+                                </p>
+                            }
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button (click)="details(item)" mat-button>
+                                <mat-icon role="img" aria-hidden="true">arrow_forward</mat-icon>
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+
+                </div>
+            </div>
+        }
+        @if (Model.viewMode == "List")
+        {
+            <mat-card [hidden]="isFilterDescriptionShown || searchResult?.resultList?.length === 0">
+                <mat-card-content>
+                    <ms-spinner [isLoading]="isLoading"></ms-spinner>
+                    <mat-list>
+                        <h3 mat-subheader>List</h3>
+                        <mat-list-item *ngFor="let item of searchResult?.resultList">
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "avatar"))
+                            {
+                                <mat-icon mat-list-icon>{{item.@column.name }}</mat-icon>
+                            }
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "title" || x.mode == "subtitle"))
+                            {
+                                <h4 mat-line>
+                                    {{item.@column.name@if (column.type == "date")
+                                    {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                    {<text> | number:'1.2-2' </text>} }}
+                                </h4>
+                            }
+                            @foreach (var column in ((IEnumerable<dynamic>)Model.columns).Where(x => x.mode == "content"))
+                            {
+                                <p mat-line>
+                                    {{item.@column.name@if (column.type == "date")
+                                    {<text> | date:'dd.MM.yyyy' </text>}@if (column.type == "decimal")
+                                    {<text> | number:'1.2-2' </text>} }}
+                                </p>
+                            }
+                        </mat-list-item>
+                    </mat-list>
+                </mat-card-content>
+            </mat-card>
+        }
+        @if (Model.viewMode == "Cards" || Model.viewMode == "List")
+        {<div *ngIf="!isFilterDescriptionShown" class="row">
+                <div class="col-sm-12 text-center">
+                    <button *ngIf="searchResult?.hasMore" mat-mini-fab color="primary" aria-label="Search" (click)="searchMore()">
+                        <mat-icon role="img" aria-hidden="true">more_horiz</mat-icon>
+                    </button>
+                </div>
+            </div>}
+    </div>
+    @if (Model.hasContextMenu)
+    {
+        <mat-menu #appMenu="matMenu">
+            <ng-template matMenuContent let-data="data">
+                <button mat-menu-item>Action 1</button>
+                <button mat-menu-item>Action 2</button>
+            </ng-template>
+        </mat-menu>}
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{ 'General.Cancel' | translate }}</button>
+    <button mat-button(click)="ok()" cdkFocusInitial>{{ 'General.OK' | translate }}</button>
+</mat-dialog-actions>}

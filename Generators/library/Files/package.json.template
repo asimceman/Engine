@@ -1,0 +1,19 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+{
+  "name": "@dasherize(Model.name)",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@@angular/common": "^@@angularLatestVersion",
+    "@@angular/core": "^@@angularLatestVersion"
+  }
+}

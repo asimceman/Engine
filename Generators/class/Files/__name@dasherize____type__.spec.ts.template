@@ -1,0 +1,18 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+import { @classify(Model.name) } from './@dasherize(Model.name)@Model.type';
+
+describe('@classify(Model.name)', () => {
+  it('should create an instance', () => {
+    expect(new @(classify(Model.name))()).toBeTruthy();
+    });
+    });

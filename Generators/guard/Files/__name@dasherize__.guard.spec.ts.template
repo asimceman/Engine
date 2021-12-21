@@ -1,0 +1,26 @@
+@using Humanizer;
+@functions{
+    public string dasherize(string dashed)
+    {
+        return dashed.Underscore().Dasherize();
+    }
+    public string classify(string classified)
+    {
+        return classified.Pascalize();
+    }
+}
+import { TestBed, async, inject } from '@@angular/core/testing';
+
+import { @classify(Model.name)Guard } from './@(dasherize(Model.name)).guard';
+
+describe('@classify(Model.name)Guard', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [@classify(Model.name)Guard]
+    });
+    });
+
+    it('should ...', inject([@classify(Model.name)Guard], (guard: @classify(Model.name)Guard) => {
+    expect(guard).toBeTruthy();
+    }));
+    });

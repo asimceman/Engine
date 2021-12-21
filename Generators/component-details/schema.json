@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsAngularComponent",
-  "title": "Angular Component Options Schema",
+  "id": "SchematicsAngularComponentTable",
+  "title": "Angular Dialog Options Schema",
   "type": "object",
   "description": "Creates a new generic component definition in the given or default project.",
   "properties": {
@@ -27,6 +27,33 @@
       },
       "x-prompt": "What name would you like to use for the component?"
     },
+    "service": {
+      "type": "string",
+      "x-prompt": "What is the service name (eg. User)?"
+    },
+    "model": {
+      "type": "string",
+      "x-prompt": "What is the model name eg. User (used mainly for localization)"
+    },
+    "isDialog": {
+      "type": "boolean",
+      "x-prompt": "This component is dialog?",
+      "default": false
+    },
+    "isTabbed": {
+      "type": "boolean",
+      "x-prompt": "This component should be rendered as tabs?",
+      "default": false
+    },
+    "parentId": {
+      "type": "string",
+      "x-prompt": "If this component can't be without parent, type its prop name here or leave empty (eg. customerId)"
+    },
+    "isIdFromRoute": {
+      "type": "boolean",
+      "x-prompt": "Id for entity is retreived from route?",
+      "default": true
+    },
     "inlineStyle": {
       "description": "When true, includes styles inline in the component.ts file. Only CSS styles can be included inline. By default, an external styles file is created and referenced in the component.ts file.",
       "type": "boolean",
@@ -44,14 +71,14 @@
     "viewEncapsulation": {
       "description": "The view encapsulation strategy to use in the new component.",
       "enum": [ "Emulated", "Native", "None", "ShadowDom" ],
-      "default": "Emulated",
-      "type": "string",
+      "type": "boolean",
       "alias": "v",
+      "default": true,
       "x-user-analytics": 11
     },
     "changeDetection": {
       "description": "The change detection strategy to use in the new component.",
-      "enum": ["Default", "OnPush"],
+      "enum": [ "Default", "OnPush" ],
       "type": "string",
       "default": "Default",
       "alias": "c"
@@ -79,7 +106,7 @@
     "style": {
       "description": "The file extension or preprocessor to use for style files.",
       "type": "string",
-      "default": "css",
+      "default": "scss",
       "enum": [
         "css",
         "scss",
@@ -92,13 +119,13 @@
     "spec": {
       "type": "boolean",
       "description": "When true (the default), generates a  \"spec.ts\" test file for the new component.",
-      "default": true,
+      "default": false,
       "x-deprecated": "Use \"skipTests\" instead."
     },
     "skipTests": {
       "type": "boolean",
       "description": "When true, does not create \"spec.ts\" test files for the new component.",
-      "default": false,
+      "default": true,
       "x-user-analytics": 12
     },
     "flat": {
@@ -122,7 +149,7 @@
       "default": false,
       "description": "Specifies if the component should have a selector or not."
     },
-    "module":  {
+    "module": {
       "type": "string",
       "description": "The declaring NgModule.",
       "alias": "m"
@@ -135,7 +162,7 @@
     },
     "entryComponent": {
       "type": "boolean",
-      "default": false,
+      "default": true,
       "description": "When true, the new component is the entry component of the declaring NgModule."
     },
     "lintFix": {
@@ -143,9 +170,33 @@
       "default": false,
       "description": "When true, applies lint fixes after generating the component.",
       "x-user-analytics": 15
+    },
+    "columns": {
+      "type": "questionArray",
+      "x-prompt": "Which fields does this component need (press enter on empty line to finish)",
+      "enum": [
+        {
+          "question": "Which type?",
+          "name": "type",
+          "type": "string",
+          "options": [ "input", "datepicker", "autocomplete", "select", "checkbox", "textarea", "repeat" ]
+        },
+        {
+          "question": "Size?",
+          "name": "size",
+          "type": "int",
+          "options": [ 3, 4, 6, 8, 10, 12 ]
+        }
+
+      ]
+    },
+    "additionalServices": {
+      "type": "questionArray",
+      "x-prompt": "Which additional services does this component need (press enter on empty line to finish)",
+      
     }
   },
   "required": [
-    "name"
+    "name", "service", "model"
   ]
 }

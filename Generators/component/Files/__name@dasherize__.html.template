@@ -1,0 +1,30 @@
+﻿<body>
+	@using System.Text.RegularExpressions;
+	@functions{
+	public string dasherize(string dashed){
+	return Regex.Replace(dashed,@"/[A-Z]/g", m => "-" + m.ToString().ToLower()).ToString();
+	}
+	}
+	@foreach (var filter in Model.filters)
+	{
+	<div>@filter.name</div>
+	<div>@filter.size</div>
+	<div>@filter.filterType</div>
+	}
+	@if(Model.searchField)
+	{
+		<div>@Model.searchField</div>
+	}
+	@foreach (var column in Model.columns)
+	{
+	<div>@column.name</div>
+	<div>@column.filterType</div>
+	}
+	<h1>@Model.service</h1>
+	@if(Model.searchField)
+	{
+	<div>Jutro je jutro je</div>
+	}
+	<p>@Model.viewMode</p>
+	<h1>@dasherize(Model.name)</h1>
+</body>
