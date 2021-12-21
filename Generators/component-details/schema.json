@@ -71,9 +71,9 @@
     "viewEncapsulation": {
       "description": "The view encapsulation strategy to use in the new component.",
       "enum": [ "Emulated", "Native", "None", "ShadowDom" ],
-      "type": "boolean",
+      "type": "string",
       "alias": "v",
-      "default": true,
+      "default": "Emulated",
       "x-user-analytics": 11
     },
     "changeDetection": {
@@ -173,7 +173,7 @@
     },
     "columns": {
       "type": "questionArray",
-      "x-prompt": "Which columns does this component need (press enter on empty line to finish)",
+      "x-prompt": "Which fields does this component need (press enter on empty line to finish)",
       "enum": [
         {
           "question": "Which type?",

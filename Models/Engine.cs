@@ -246,7 +246,7 @@ namespace SchematicsProject
         public void QuestionArrayPrompt(dynamic question)
         {
             var first = true;
-            ArrayList filters = new ArrayList();
+            List<IDictionary<string, dynamic>> filters = new List<IDictionary<string, dynamic>>();
             var filter = "";
             JArray questionHelper = Enums[(question.Key).ToString()] as JArray;
             ArrayList questions = new ArrayList();
