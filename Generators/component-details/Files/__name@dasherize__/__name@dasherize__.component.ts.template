@@ -13,28 +13,13 @@
         return camelized.Camelize();
     }
 }
-import
-{ Component, ViewChild, OnDestroy, AfterViewInit, Input, OnInit @if (Model.viewEncapsulation != null)
-{<text>, ViewEncapsulation</text>} @if (Model.changeDetection != "Default")
-{<text>, ChangeDetectionStrategy</text>} }
-from '@@angular/core';
-@if (Model.isDialog)
-{<text> import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
-import
-{ Location }
-from '@@angular/common';
-import
-{ ActivatedRoute, Router}
-from '@@angular/router';
-import
-{ FormlyFieldConfig}
-from '@@ngx-formly/core';
-import
-{ FormGroup}
-from '@@angular/forms';
-import
-{ Subject}
-from 'rxjs';
+import { Component, ViewChild, OnDestroy, AfterViewInit, Input, OnInit @if (Model.viewEncapsulation != null){<text>, ViewEncapsulation</text>} @if (Model.changeDetection != "Default"){<text>, ChangeDetectionStrategy</text>} }from '@@angular/core';
+@if (Model.isDialog){<text> import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
+import { Location } from '@@angular/common';
+import { ActivatedRoute, Router} from '@@angular/router';
+import { FormlyFieldConfig} from '@@ngx-formly/core';
+import { FormGroup} from '@@angular/forms';
+import { Subject} from 'rxjs';
 @if (!Model.isDialog)
 {<text> import { PageTitleService } from 'app/shared/services/page-title.service'; </text>}
 
