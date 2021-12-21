@@ -23,7 +23,7 @@ namespace SchematicsProject
 
             string input = CreateInput(args);
 
-            string[] input2 = new string[] { "-t", "interface", "asimCeman" };
+            string[] input2 = new string[] { "-t", "service", "asimCeman" };
 
 
             var engine = new Engine();

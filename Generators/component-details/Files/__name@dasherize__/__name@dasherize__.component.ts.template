@@ -124,7 +124,7 @@ else if (column.type == "repeat")
         {
         fieldGroupClassName: 'row',
         fieldGroup:[
-        @foreach (var columnInner in Model.columns) {<text>
+        @foreach (var columnInner in column.innerColumns) {<text>
                 {
                 className: 'col-sm-@columnInner.size',
                 type: '@columnInner.type',

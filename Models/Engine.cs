@@ -283,6 +283,16 @@ namespace SchematicsProject
                             var selected = options[selectedIndex];
                             
                             tip.Add(enumQuestion["name"].ToString(), DetermineVariableType(enumQuestion, selected));
+
+                            if(selected == "autocomplete")
+                            {
+                                Console.WriteLine("What service is used to retreive data, eg: Users?");
+                                var service = Console.ReadLine();
+                                tip.Add("service", service);
+                                Console.WriteLine("What field is used to filter data, eg: fts | nameGTE ...?");
+                                var field = Console.ReadLine();
+                                tip.Add("filterField", field);
+                            }
                             
                         }
                         else

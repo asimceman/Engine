@@ -173,7 +173,7 @@
     },
     "columns": {
       "type": "questionArray",
-      "x-prompt": "Which fields does this component need (press enter on empty line to finish)",
+      "x-prompt": "Which columns does this component need (press enter on empty line to finish)",
       "enum": [
         {
           "question": "Which type?",

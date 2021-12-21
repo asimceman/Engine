@@ -45,40 +45,43 @@
 	  <Content Include="Generators\directive\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\e2e**">
+	  <Content Include="Generators\e2e\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\enum**">
+	  <Content Include="Generators\enum\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\guard**">
+	  <Content Include="Generators\guard\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\interface**">
+	  <Content Include="Generators\interface\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\library**">
+	  <Content Include="Generators\library\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\module**">
+	  <Content Include="Generators\module\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\ng-new**">
+	  <Content Include="Generators\ng-new\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\pipe**">
+	  <Content Include="Generators\pipe\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\service**">
+	  <Content Include="Generators\service\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\service-worker**">
+	  <Content Include="Generators\service-worker\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Generators\universal**">
+	  <Content Include="Generators\universal\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
   </ItemGroup>
+
+
+  
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
