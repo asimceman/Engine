@@ -18,9 +18,9 @@ describe('@classify(Model.name)Guard', () => {
     TestBed.configureTestingModule({
       providers: [@classify(Model.name)Guard]
     });
-    });
+  });
 
     it('should ...', inject([@classify(Model.name)Guard], (guard: @classify(Model.name)Guard) => {
-    expect(guard).toBeTruthy();
+        expect(guard).toBeTruthy();
     }));
-    });
+});

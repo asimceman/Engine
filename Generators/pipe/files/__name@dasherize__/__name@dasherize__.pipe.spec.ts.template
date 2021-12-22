@@ -15,5 +15,5 @@ describe('@classify(Model.name)Pipe', () => {
   it('create an instance', () => {
     const pipe = new @classify(Model.name)Pipe();
     expect(pipe).toBeTruthy();
-    });
-    });
+  });
+});
