@@ -14,7 +14,8 @@
     }
 }
 import { Component, ViewChild, AfterViewInit, OnInit @if(Model.viewEncapsulation!=null) {<text>, ViewEncapsulation</text>}@if (Model.changeDetection != "Default") {<text>, ChangeDetectionStrategy</text>}@if (Model.parentId!=null && Model.parentId != "") {<text>, Input</text>} } from '@@angular/core';
-import { MatPaginator, MatSort} from '@@angular/material';
+import { MatPaginator } from '@@angular/material/paginator';
+import { MatSort } from '@@angular/material/sort';
 import { Location } from '@@angular/common';
 import {ActivatedRoute, Router} from '@@angular/router';
 import {FormlyFieldConfig} from '@@ngx-formly/core';
