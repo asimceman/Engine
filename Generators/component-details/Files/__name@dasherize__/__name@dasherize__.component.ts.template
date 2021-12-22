@@ -90,8 +90,8 @@ onDestroy$ = new Subject<void>
             getByFilter: async (id, text) =>
             {
             const result = await this.@(camelize(column.service)).getPage({
-id: id,
-@column.filterField: text
+            id: id,
+            @column.filterField: text
 });
             return result.resultList;
             },

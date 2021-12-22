@@ -104,7 +104,7 @@ displayedColumns: string[] = [
 @@ViewChild(MatPaginator, { static: false}) paginator: MatPaginator;
 @@ViewChild(MatSort, { static: false}) sort: MatSort;</text>}
 
-      constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text> public @camelize(@additionalService): @classify(additionalService),</text>}
+      constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text> public @camelize(@additionalService.name): @classify(additionalService.name),</text>}
     private location: Location,
     private router: Router,
     protected activatedRoute: ActivatedRoute,
