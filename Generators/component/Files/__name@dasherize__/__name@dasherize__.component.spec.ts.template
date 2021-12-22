@@ -15,8 +15,7 @@ import { @classify(Model.name)Component } from './@(dasherize(Model.name)).compo
 
 describe('@classify(Model.name)Component', () => {
   let component: @classify(Model.name)Component;
-  let fixture: ComponentFixture<@classify(Model.name)Component>
-    ;
+  let fixture: ComponentFixture<@classify(Model.name)Component>;
 
     beforeEach(async(() => {
     TestBed.configureTestingModule({

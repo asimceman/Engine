@@ -1,6 +1,5 @@
 @using Humanizer;
-@functions{
-    public string dasherize(string dashed)
+@functions{ public string dasherize(string dashed)
     {
         return dashed.Underscore().Dasherize();
     }
@@ -11,48 +10,61 @@
     public string camelize(string classified)
     {
         return classified.Camelize();
-    }
-}
-import { Component, ViewChild, AfterViewInit, OnInit @if(Model.viewEncapsulation!=null) {<text>, ViewEncapsulation</text>}@if (Model.changeDetection != "Default") {<text>, ChangeDetectionStrategy</text>}@if (Model.parentId!=null && Model.parentId != "") {<text>, Input</text>} } from '@@angular/core';
+    } }
+import { Component, ViewChild, AfterViewInit, OnInit @if (Model.viewEncapsulation != null)
+{<text>, ViewEncapsulation</text>}@if (Model.changeDetection != "Default")
+{<text>, ChangeDetectionStrategy</text>}@if (Model.parentId != null && Model.parentId != "")
+{<text>, Input</text>} } from '@@angular/core';
 import { MatPaginator } from '@@angular/material/paginator';
 import { MatSort } from '@@angular/material/sort';
 import { Location } from '@@angular/common';
 import {ActivatedRoute, Router} from '@@angular/router';
 import {FormlyFieldConfig} from '@@ngx-formly/core';
 import {FormGroup} from '@@angular/forms';
-@if (Model.mode == "Standard") {<text> import { PageTitleService } from 'app/shared/services/page-title.service'; </text>}
+@if (Model.mode == "Standard")
+{<text> import { PageTitleService } from 'app/shared/services/page-title.service'; </text>}
 
-@if (Model.routeMode == "Dialog") {<text> import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@@angular/material/dialog'; </text>}
-
-
+@if (Model.mode == "Dialog")
+{<text>import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@@angular/material/dialog';
+import { Inject } from '@@angular/core';  </text>}
 
 @@Component({
-    @if(!Model.skipSelector) {<text>
-  selector: '@Model.selector',</text>}
-    @if(Model.inlineTemplate) {<text>
-  template: `
-    < p >
-      @dasherize(Model.name) works!
-    </ p >
-  `,</text>} else
-    {<text>
-  templateUrl: './@(dasherize(Model.name)).component.html',</text>}
-    @if(Model.inlineStyle) {<text>
-  styles:[]</text>} else
-    {<text>
-  styleUrls:['./@(dasherize(Model.name)).component.@Model.style']</text>}
-    @if(Model.viewEncapsulation!= null) {<text>,
-  encapsulation: ViewEncapsulation.@Model.viewEncapsulation</text>}
-    @if(Model.changeDetection != "Default") {<text>,
-  changeDetection: ChangeDetectionStrategy.@Model.changeDetection</text>}
+@if (!Model.skipSelector)
+{<text>
+        selector: '@Model.selector',</text>}
+@if (Model.inlineTemplate)
+{<text>
+        template: `
+        < p >
+        @dasherize(Model.name) works!
+        </ p >
+        `,</text>}
+else
+{<text>
+    templateUrl: './@(dasherize(Model.name)).component.html',</text>}
+@if (Model.inlineStyle)
+{<text>
+        styles:[]</text>}
+else
+{<text>
+    styleUrls:['./@(dasherize(Model.name)).component.@Model.style']</text>}
+@if (Model.viewEncapsulation != null)
+{<text>,
+        encapsulation: ViewEncapsulation.@Model.viewEncapsulation</text>}
+@if (Model.changeDetection != "Default")
+{<text>,
+        changeDetection: ChangeDetectionStrategy.@Model.changeDetection</text>}
+
 })
 export class @classify(Model.name)Component implements OnInit, AfterViewInit {
         // REGION:Common Variables
-@if (Model.parentId!=null && Model.parentId != "")
-{<text>@@Input()@Model.parentId = null;
-</text>}
+@if (Model.parentId != null && Model.parentId != "")
+        {<text>@@Input()@Model.parentId = null;
+        </text>}
         isLoading = false;
-@if (Model.searchField) {<text> isFilterDescriptionShown = true; </text>}
+@if (Model.searchField)
+        {<text> isFilterDescriptionShown = true; </text>}
+
         searchObject: any = {
           page: 0,
           pageSize: 10,
@@ -60,205 +72,221 @@ export class @classify(Model.name)Component implements OnInit, AfterViewInit {
           reload: false,
           // add filters here
           additionalData: { includeList: [] },
-@if (Model.parentId!=null && Model.parentId != "")
-{<text>@Model.parentId: null</text>}
+@if (Model.parentId != null && Model.parentId != "")
+        {<text>@Model.parentId: null</text>}
         };
         searchObjectClone = {}; //holds initial search object so that we can clear search
         form = new FormGroup({});
 @if (Model.searchField)
-{<text>
-fields: FormlyFieldConfig[] = [{
-    fieldGroupClassName: 'row',
-fieldGroup:[
-@foreach(var column in Model.filters) {<text>
-            {
-            className: 'col-sm-@column.size',
-           type: '@column.type',
-           key: '@column.name',
-           templateOptions:
+        {<text>
+        fields: FormlyFieldConfig[] = [{
+        fieldGroupClassName: 'row',
+        fieldGroup:[
+        @foreach (var column in Model.filters)
+        {<text>
+        {
+        className: 'col-sm-@column.size',
+        type: '@column.type',
+        key: '@column.name',
+        templateOptions:
+        {
+        translate: true,
+        label: '@(Model.name + '.' + column.name)',
+        @if (column.type == "textarea")
+        {<text> rows: 3,</text>}
+        @if (column.type == "autocomplete")
+        {<text>
+                getByFilter: async (id, text) =>
                 {
-                translate: true,
-               label: '@(Model.name + '.' + column.name)',
-               @if(column.type == "textarea") {<text> rows: 3,</text>}
-                    @if(column.type == "autocomplete") {<text>
-                    getByFilter: async (id, text) =>
-                    {
-                        const result = await this.@(camelize(column.service)).getPage({
-                        id: id,
-                  @column.filterField: text
-                        });
-                        return result.resultList;
-                    },</text>}
-                },
-       },</text>}
-]
-}];
-</text>}
+                const result = await this.@(camelize(column.service)).getPage({
+                id: id,
+                @column.filterField: text
+                });
+                return result.resultList;
+                },</text>}
+        },
+        },</text>}
+        ]
+        }];
+        </text>}
 
       searchResult: any = {count: 100, resultList: []}; // leave room for hasMore flag
 @if (Model.viewMode == "Table")
-{<text>
-displayedColumns: string[] = [
-@foreach(var column in Model.columns) {<text> '@column.name', </text>}
-    @if(Model.hasContextMenu) {<text> '...' </text>}
-]
-@@ViewChild(MatPaginator, { static: false}) paginator: MatPaginator;
-@@ViewChild(MatSort, { static: false}) sort: MatSort;</text>}
+        {<text>
+        displayedColumns: string[] = [
+        @foreach (var column in Model.columns)
+        {<text> '@column.name', </text>}
+        @if (Model.hasContextMenu)
+        {<text> '...' </text>}
+        ]
+        @@ViewChild(MatPaginator, { static: false}) paginator: MatPaginator;
+        @@ViewChild(MatSort, { static: false}) sort: MatSort;</text>}
 
-      constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text> public @camelize(@additionalService.name): @classify(additionalService.name),</text>}
+    constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices)
+    {<text> public @camelize(@additionalService.name): @classify(additionalService.name),</text>}
+
     private location: Location,
     private router: Router,
     protected activatedRoute: ActivatedRoute,
-    @if (Model.mode == "Standard") {<text>private pageTitleService: PageTitleService,</text>}
-    @if(Model.routeMode == "Dialog") {<text>private dialog: MatDialog,</text>}
-    @if (Model.mode == "Dialog") {<text>public dialogRef: MatDialogRef<@classify(Model.name)Component>
-        ,
-        @@Inject(MAT_DIALOG_DATA) public data: any,</text>}) {
-        }
+    @if (Model.mode == "Standard")
+    {<text>private pageTitleService: PageTitleService,</text>}
+    @if (Model.routeMode == "Dialog")
+    {<text>private dialog: MatDialog,</text>}
+    @if (Model.mode == "Dialog")
+    {<text>public dialogRef: MatDialogRef<@classify(Model.name)Component>,
+    @@Inject(MAT_DIALOG_DATA) public data: any,</text>}) {
+    }
 
-        async ngOnInit() {
-        @if (Model.mode == "Standard") {<text> this.pageTitleService.setTitle('Views.' + '@classify(Model.name)'); </text>}
-        await this.init();
-        }
+    async ngOnInit() {
+    @if (Model.mode == "Standard")
+    {<text> this.pageTitleService.setTitle('Views.' + '@classify(Model.name)'); </text>}
+    await this.init();
+    }
 
-        private async init() {
-        @if (Model.parentId!=null && Model.parentId != "" && Model.mode != "Dialog") {<text> this.searchObject.@Model.parentId = this.@Model.parentId; </text>}
-        @if (Model.parentId!=null && Model.parentId != "" && Model.mode == "Dialog") {<text> this.searchObject.@Model.parentId = this.data.@Model.parentId; </text>}
-        Object.assign(this.searchObjectClone, this.searchObject);
-        @if (Model.writeSearchToQuery)
-{<text>
+    private async init() {
+    @if (Model.parentId != null && Model.parentId != "" && Model.mode != "Dialog")
+    {<text> this.searchObject.@Model.parentId = this.@Model.parentId; </text>}
+    @if (Model.parentId != null && Model.parentId != "" && Model.mode == "Dialog")
+    {<text> this.searchObject.@Model.parentId = this.data.@Model.parentId; </text>}
+    Object.assign(this.searchObjectClone, this.searchObject);
+    @if (Model.writeSearchToQuery)
+    {<text>
             this.activatedRoute.queryParams.subscribe(async x =>
             {
-                if (x.__query)
-                {
-                    const search = JSON.parse(atob(x.__query));
-                    Object.assign(this.searchObject, search);
-                    this.searchObject = { ...this.searchObject};
-                    this.searchObject.reload = true;
-                    await this.searchInternal();
-                }
-                else
-                {
-                    this.searchObject = { };
-                    Object.assign(this.searchObject, this.searchObjectClone);
-                    @if(!Model.searchField) {<text> await this.search(true); </text>}
-                }
+            if (x.__query)
+            {
+            const search = JSON.parse(atob(x.__query));
+            Object.assign(this.searchObject, search);
+            this.searchObject = { ...this.searchObject};
+            this.searchObject.reload = true;
+            await this.searchInternal();
+            }
+            else
+            {
+            this.searchObject = { };
+            Object.assign(this.searchObject, this.searchObjectClone);
+            @if (!Model.searchField)
+            {<text> await this.search(true); </text>}
+            }
             });
-</text>}
-else
-{<text>
-            await this.search(true);
-</text>}
-        }
+            </text>}
+        else
+        {<text>
+                await this.search(true);
+        </text>}
+    }
 
 
-        async search(reload = false) {
-        this.searchObject.reload = reload; // reverse logic
-        if (reload === true) {
-        this.searchObject.page = 0;
-        }
-        await this.searchInternal();
-        }
+    async search(reload = false) {
+    this.searchObject.reload = reload; // reverse logic
+    if (reload === true) {
+    this.searchObject.page = 0;
+    }
+    await this.searchInternal();
+    }
 
-        async searchMore() {
-        this.searchObject.page += 1;
-        await this.searchInternal(true);
-        }
+    async searchMore() {
+    this.searchObject.page += 1;
+    await this.searchInternal(true);
+    }
 
-        private async searchInternal(append = false) {
-        this.isLoading = true;
-        const search: any = {};
-        Object.assign(search, this.searchObject);
-        if (this.searchObject.page === 0) {
-        search.includeCount = this.searchObject.includeCount;
-        } else {
-        search.includeCount = false;
-        }
-        const result = (await this.mainService.getPage(search));
-        if (this.searchObject.reload) {
-        this.searchResult.count = result.count || this.searchResult.count;
-        }
-        @if (Model.writeSearchToQuery) {<text> this.writeToQueryString(); </text>}
-        if (append) {
-        this.searchResult.resultList = [...this.searchResult.resultList, ...result.resultList];
-        } else {
-        this.searchResult.resultList = result.resultList;
-        }
-        this.searchResult.hasMore = result.hasMore;
-        this.isLoading = false;
-        @if (Model.searchField) {<text> this.isFilterDescriptionShown = false; </text>}
-        return result;
-        }
-        @if (Model.writeSearchToQuery)
-{<text>
+    private async searchInternal(append = false) {
+    this.isLoading = true;
+    const search: any = {};
+    Object.assign(search, this.searchObject);
+    if (this.searchObject.page === 0) {
+    search.includeCount = this.searchObject.includeCount;
+    } else {
+    search.includeCount = false;
+    }
+    const result = (await this.mainService.getPage(search));
+    if (this.searchObject.reload) {
+    this.searchResult.count = result.count || this.searchResult.count;
+    }
+    @if (Model.writeSearchToQuery)
+    {<text> this.writeToQueryString(); </text>}
+    if (append) {
+    this.searchResult.resultList = [...this.searchResult.resultList, ...result.resultList];
+    } else {
+    this.searchResult.resultList = result.resultList;
+    }
+    this.searchResult.hasMore = result.hasMore;
+    this.isLoading = false;
+    @if (Model.searchField)
+    {<text> this.isFilterDescriptionShown = false; </text>}
+    return result;
+    }
+    @if (Model.writeSearchToQuery)
+    {<text>
             private writeToQueryString()
             {
-                const urlParts = this.router.url.split('?');
-                let url = urlParts[0];
-                const urlParams = new URLSearchParams(urlParts[urlParts.length - 1]);
-                urlParams.delete('__query');
+            const urlParts = this.router.url.split('?');
+            let url = urlParts[0];
+            const urlParams = new URLSearchParams(urlParts[urlParts.length - 1]);
+            urlParams.delete('__query');
 
-                url = url.split('?')[0] + '?';
-                urlParams.append('__query', btoa(JSON.stringify(this.searchObject)));
-                let params = '';
-                urlParams.forEach((value, key) =>
-                {
-                    if (value && value !== '')
-                    {
-                          params += key + '=' + value + '&';
-                    }
-                });
-                url += params;
-                this.location.replaceState(url);
+            url = url.split('?')[0] + '?';
+            urlParams.append('__query', btoa(JSON.stringify(this.searchObject)));
+            let params = '';
+            urlParams.forEach((value, key) =>
+            {
+            if (value && value !== '')
+            {
+            params += key + '=' + value + '&';
             }
-</text>}
-        ngAfterViewInit(): void {@if (Model.viewMode == "Table")
-{<text>
+            });
+            url += params;
+            this.location.replaceState(url);
+            }
+    </text>}
+    ngAfterViewInit(): void {@if (Model.viewMode == "Table")
+    {<text>
             this.paginator.page.subscribe(async (page) =>
             {
-                const reload = this.searchObject.pageSize !== page.pageSize;
-                this.searchObject.page = page.pageIndex;
-                this.searchObject.pageSize = page.pageSize;
-                await this.search(reload);
+            const reload = this.searchObject.pageSize !== page.pageSize;
+            this.searchObject.page = page.pageIndex;
+            this.searchObject.pageSize = page.pageSize;
+            await this.search(reload);
             });
             this.sort.sortChange.subscribe((event) =>  {
-                this.searchObject.page = 0;
-                this.searchObject.orderBy = event.active + " " + event.direction.toUpperCase();
-                this.search(true);
+            this.searchObject.page = 0;
+            this.searchObject.orderBy = event.active + " " + event.direction.toUpperCase();
+            this.search(true);
             });
-</text>}
-        }
+    </text>}
+    }
 
-        async clear() {
-        this.searchObject = {};
-        Object.assign(this.searchObject, this.searchObjectClone);
-        await this.search(true);
-        }
+    async clear() {
+    this.searchObject = {};
+    Object.assign(this.searchObject, this.searchObjectClone);
+    await this.search(true);
+    }
 
-        details(row) {
-        @if (Model.routeMode == "Url" && Model.route!=null) {<text> this.router.navigate(['@Model.route', row.id], { relativeTo: this.activatedRoute.parent }); </text>}
-        @if (Model.routeMode == "Dialog" && Model.route!=null)
-{<text>
+    details(row) {
+    @if (Model.routeMode == "Url" && Model.route != null)
+    {<text> this.router.navigate(['@Model.route', row.id], { relativeTo: this.activatedRoute.parent }); </text>}
+    @if (Model.routeMode == "Dialog" && Model.route != null)
+    {<text>
             const dialogRef = this.dialog.open(@Model.route, {
             data: row
-                        });
+            });
 
             dialogRef.afterClosed().subscribe(result =>
             {
-                if (result)
-                {
-                    this.search(true);
-                }
-            });
-</text>}
-        }
-
-        @if (Model.mode == "Dialog")
-{<text>
-            ok() {
-                //TODO: Implement when dialog OK clicked
-                throw new Error('Implement this');
-                this.dialogRef.close();
+            if (result)
+            {
+            this.search(true);
             }
-</text>}
-        }
+            });
+    </text>}
+    }
+
+    @if (Model.mode == "Dialog")
+    {<text>
+            ok() {
+            //TODO: Implement when dialog OK clicked
+            throw new Error('Implement this');
+            this.dialogRef.close();
+            }
+    </text>}
+    }

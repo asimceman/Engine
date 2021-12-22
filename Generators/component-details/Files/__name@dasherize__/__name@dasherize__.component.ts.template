@@ -14,7 +14,8 @@
     }
 }
 import { Component, ViewChild, OnDestroy, AfterViewInit, Input, OnInit @if (Model.viewEncapsulation != null){<text>, ViewEncapsulation</text>} @if (Model.changeDetection != "Default"){<text>, ChangeDetectionStrategy</text>} }from '@@angular/core';
-@if (Model.isDialog){<text> import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
+@if (Model.isDialog){<text>import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
+
 import { Location } from '@@angular/common';
 import { ActivatedRoute, Router} from '@@angular/router';
 import { FormlyFieldConfig} from '@@ngx-formly/core';
@@ -25,8 +26,7 @@ import { Subject} from 'rxjs';
 
 @@Component({
 @if (!Model.skipSelector)
-{<text>
-        selector: '@Model.selector',</text>}
+{<text>    selector: '@Model.selector',</text>}
 @if (Model.inlineTemplate)
 {<text>
         template: `
@@ -36,19 +36,20 @@ import { Subject} from 'rxjs';
         `,</text>}
 else
 {<text>
-templateUrl: './@(dasherize(Model.name)).component.html',</text>}
+    templateUrl: './@(dasherize(Model.name)).component.html',</text>}
 @if (Model.inlineStyle)
 {<text>
-styles:[]</text>}
+    styles:[]</text>}
 else
 {<text>
-styleUrls:['./@(dasherize(Model.name)).component.@Model.style']</text>}
+    styleUrls:['./@(dasherize(Model.name)).component.@Model.style']</text>}
 @if (Model.viewEncapsulation!=null)
 {<text>,
-encapsulation: ViewEncapsulation.@Model.viewEncapsulation</text>}
+    encapsulation: ViewEncapsulation.@Model.viewEncapsulation</text>}
 @if (Model.changeDetection != "Default")
 {<text>,
 changeDetection: ChangeDetectionStrategy.@Model.changeDetection</text>}
+
 })
 export class @classify(Model.name)Component implements OnInit, AfterViewInit, OnDestroy {
       // REGION:Common Variables
@@ -61,7 +62,8 @@ onDestroy$ = new Subject<void>
     id: any = 'new';
     additionalData = { includeList:[]};
     actions = [
-    @if (!Model.isDialog) {<text> { name: 'Action.cancel', visible: true, method: () => { this.location.back(); }, color: "primary"},</text>}
+    @if (!Model.isDialog) {<text> 
+    { name: 'Action.cancel', visible: true, method: () => { this.location.back(); }, color: "primary"},</text>}
     { name: 'Action.save', visible: true, method: async () => { await this.save(); }, color: "accent"}
     ];
     @if (Model.parentId!=null && Model.parentId != "")
@@ -74,28 +76,26 @@ onDestroy$ = new Subject<void>
     fieldGroup:[
     @foreach (var column in Model.columns) {<text>
             {
-            className: 'col-sm-@column.size',
-            type: '@column.type',
-            key: '@column.name',
-            templateOptions:
-            {
-            translate: true,
-            label: '@(Model.name + '.' + column.name)',
+                className: 'col-sm-@column.size',
+                type: '@column.type',
+                key: '@column.name',
+                templateOptions: {
+                    translate: true,
+                    label: '@(Model.name + '.' + column.name)',
             @if (column.type == "textarea")
-            {<text>
+                    {<text>
                     rows: 3,
-            </text>}
+                    </text>}
         else if (column.type == "autocomplete")
        {<text>
-            getByFilter: async (id, text) =>
-            {
-            const result = await this.@(camelize(column.service)).getPage({
-            id: id,
-            @column.filterField: text
-});
-            return result.resultList;
-            },
-    </text>}
+                    getByFilter: async (id, text) => {   
+                    const result = await this.@(camelize(column.service)).getPage({
+                      id: id,
+                      @column.filterField: text
+                    });
+                    return result.resultList;
+                   },
+        </text>}
 else if (column.type == "repeat")
        {<text>
             allowRemove: true,
@@ -170,17 +170,18 @@ id: id,
     {<text>
         //TODO: Add additional fields config and add it to tabs array.
         tabs = [{ name: 'REPLACE_ME', fields: this.fields}]
-form = new FormArray(this.tabs.map(() => new FormGroup({ })));
+        form = new FormArray(this.tabs.map(() => new FormGroup({ })));
     </text>}
 
 
-    constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text> public @camelize(additionalService.name): @classify(additionalService.name),</text>}
+    constructor(public mainService: @classify(Model.service)Service, @foreach (var additionalService in Model.additionalServices) {<text>
+    public @camelize(additionalService.name): @classify(additionalService.name),</text>}
+
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    @if (!Model.isDialog) {<text>private pageTitleService: PageTitleService,</text>}
-    @if(Model.isDialog) {<text>public dialogRef: MatDialogRef< @classify(Model.name)Component >
-    ,
+    @if (!Model.isDialog) {<text>   private pageTitleService: PageTitleService,</text>}
+    @if(Model.isDialog) {<text>    public dialogRef: MatDialogRef< @classify(Model.name)Component >,
     @@Inject(MAT_DIALOG_DATA) public data: any,</text>}) {
     }
 
@@ -266,25 +267,18 @@ form = new FormArray(this.tabs.map(() => new FormGroup({ })));
         }
         }
 
-        async submit(e)
-        {
-        if (this.form.valid || e.action == 'Action.cancel')
-        {
-        this.loading = true;
-        try
-        {
-        await this.actions.find(x => x.name == e.action).method();
-        await this.manageActionVisibility();
-        }
-        catch (e)
-        {
-        throw e;
-        }
-        finally
-        {
-        this.loading = false;
-        }
-        }
+        async submit(e) {
+            if (this.form.valid || e.action == 'Action.cancel'){
+                this.loading = true;
+                try {
+                await this.actions.find(x => x.name == e.action).method();
+                await this.manageActionVisibility();
+                } catch (e) {
+                  throw e;
+                } finally {
+                  this.loading = false;
+                }
+             }
         }
 
         async manageActionVisibility()
@@ -297,9 +291,8 @@ form = new FormArray(this.tabs.map(() => new FormGroup({ })));
         }
         }
 
-        ngOnDestroy(): void
-        {
-        this.onDestroy$.next();
-        this.onDestroy$.complete();
+        ngOnDestroy(): void {
+            this.onDestroy$.next();
+            this.onDestroy$.complete();
         }
-        }
+}
