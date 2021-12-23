@@ -9,6 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Jint;
+using Jint.Native;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using System.Reflection;
+using Microsoft.Dnx.Compilation;
+using Microsoft.CodeAnalysis.Emit;
+using System.Runtime.Loader;
 
 namespace SchematicsProject
 {
@@ -63,8 +71,83 @@ namespace SchematicsProject
                     continue;
                 PromptAction(question, requiredList);
             }
-
+            GenerateCode2();
             GetTemplatesAndGenerate(TemplatePath);
+        }
+
+        
+
+        public void GenerateCode2() 
+        {
+            foreach (string TemplateFile in GetFiles(FactoryPath))
+            {
+                
+
+                if (!TemplateFile.EndsWith(".cs"))
+                {
+                    continue;
+                }
+                var templateName = TemplateFile.Replace(FactoryPath, "");
+                templateName = templateName.Replace(@"\", "");
+                //TemplateName = TemplateName.Replace(CurrentPath + TemplatePath + "/", "");
+                templateName = GenerateName(templateName);
+
+                int index = templateName.LastIndexOf(".");
+                templateName = templateName.Substring(0, index);
+
+                string code = File.ReadAllText(TemplateFile);
+
+                // Get a SyntaxTree
+                var tree = SyntaxFactory.ParseSyntaxTree(code);
+
+                //Console.WriteLine(tree);
+                PrintDiagnostics(tree);
+
+                // Create a compilation for the syntax tree
+
+
+                var fileName = templateName + ".dll";
+                var path = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+                var assemblyPath = Path.GetDirectoryName(typeof(object).GetTypeInfo().Assembly.Location);
+                List<MetadataReference> references = new List<MetadataReference>();
+                references.Add(MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location));
+                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")));
+                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Console.dll")));
+
+                var compilation = CSharpCompilation.Create(templateName + ".dll")
+                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+                .AddReferences(references)
+                .AddSyntaxTrees(tree);
+
+                
+
+                // Emit an Assembly that contains the result of the Roslyn code generation
+                compilation.Emit(path);
+
+                // Use reflection to load and execute code
+                var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+
+
+                asm.GetType("GenerateCode." + templateName).GetMethod("Main").Invoke(null, new object[] { "model" });
+
+
+            }
+
+        }
+
+        private static void PrintDiagnostics(SyntaxTree tree)
+        {
+            // detects diagnostics in the source code
+            var diagnostics = tree.GetDiagnostics();
+
+            if (diagnostics.Any())
+            {
+                foreach (var diag in diagnostics)
+                {
+                    // if any, prints diagnostic message and line/row position
+                    Console.WriteLine($"{diag.GetMessage()} {diag.Location.GetLineSpan()}");
+                }
+            }
         }
 
         public void InputValidation(dynamic command)

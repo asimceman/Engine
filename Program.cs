@@ -23,13 +23,13 @@ namespace SchematicsProject
 
             string input = CreateInput(args);
 
-            string[] input2 = new string[] { "-t", "service", "asimCeman" };
+            string[] input2 = new string[] { "-t", "class", "asimCeman" };
 
 
             var engine = new Engine();
             try
             {
-                await engine.InputProcces(args);
+                await engine.InputProcces(input2);
             }
             catch (ArgumentException e)
             {

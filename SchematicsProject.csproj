@@ -21,6 +21,9 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.13.14" />
+    <PackageReference Include="Jint" Version="2.11.58" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0-1.final" />
+    <PackageReference Include="Microsoft.Dnx.Compilation.Abstractions" Version="1.0.0-rc1-final" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -28,6 +31,7 @@
     <PackageReference Include="Razor.Templating.Core" Version="1.5.0" />
     <PackageReference Include="RazorLight" Version="2.0.0-beta4" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
 	  <Content Include="Generators\class\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
@@ -81,6 +85,16 @@
 	  </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Generators\class\Class1.cs" />
+    <Compile Remove="Generators\class\Classof2021.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Generators\class\Class1.js" />
+  </ItemGroup>
+
+
 
   
 
@@ -89,7 +103,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="bin\Debug\netcoreapp3.1\" />
+    <Folder Include="bin\Debug\netcoreapp3.1\Generators\class\" />
+    <Folder Include="Generators\utility\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Generators\utility\lint-fix.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
