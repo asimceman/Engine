@@ -14,7 +14,7 @@
     }
 }
 import { Component, ViewChild, OnDestroy, AfterViewInit, Input, OnInit @if (Model.viewEncapsulation != null){<text>, ViewEncapsulation</text>} @if (Model.changeDetection != "Default"){<text>, ChangeDetectionStrategy</text>} }from '@@angular/core';
-@if (Model.isDialog){<text>import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material'; </text>}
+@if (Model.isDialog){<text>import { MAT_DIALOG_DATA, MatDialogRef} from '@@angular/material/dialog'; </text>}
 
 import { Location } from '@@angular/common';
 import { ActivatedRoute, Router} from '@@angular/router';
