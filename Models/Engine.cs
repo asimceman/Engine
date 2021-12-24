@@ -134,8 +134,8 @@ namespace SchematicsProject
 
                 asm.GetType(templateName).GetMethod("Main").Invoke(null, new object[] { "model" });*/
 
-                var result = await CSharpScript.EvaluateAsync(code, ScriptOptions.Default.WithImports("System.Math"));
-                Console.WriteLine(result);
+                var result = await CSharpScript.RunAsync(code, ScriptOptions.Default.WithImports("System.Math"));
+                Console.WriteLine(result.ReturnValue);
             }
 
         }
