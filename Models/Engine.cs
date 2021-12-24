@@ -17,6 +17,8 @@ using System.Reflection;
 using Microsoft.Dnx.Compilation;
 using Microsoft.CodeAnalysis.Emit;
 using System.Runtime.Loader;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace SchematicsProject
 {
@@ -77,7 +79,7 @@ namespace SchematicsProject
 
         
 
-        public void GenerateCode2() 
+        public async void GenerateCode2() 
         {
             foreach (string TemplateFile in GetFiles(FactoryPath))
             {
@@ -98,7 +100,7 @@ namespace SchematicsProject
                 string code = File.ReadAllText(TemplateFile);
 
                 // Get a SyntaxTree
-                var tree = SyntaxFactory.ParseSyntaxTree(code);
+                /*var tree = SyntaxFactory.ParseSyntaxTree(code);
 
                 //Console.WriteLine(tree);
                 PrintDiagnostics(tree);
@@ -119,6 +121,8 @@ namespace SchematicsProject
                 .AddReferences(references)
                 .AddSyntaxTrees(tree);
 
+
+
                 
 
                 // Emit an Assembly that contains the result of the Roslyn code generation
@@ -128,9 +132,10 @@ namespace SchematicsProject
                 var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 
 
-                asm.GetType("GenerateCode." + templateName).GetMethod("Main").Invoke(null, new object[] { "model" });
+                asm.GetType(templateName).GetMethod("Main").Invoke(null, new object[] { "model" });*/
 
-
+                var result = await CSharpScript.EvaluateAsync(code, ScriptOptions.Default.WithImports("System.Math"));
+                Console.WriteLine(result);
             }
 
         }
