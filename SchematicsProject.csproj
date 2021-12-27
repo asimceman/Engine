@@ -87,11 +87,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Generators\class\Class1.cs" />
+    <Compile Remove="Generators\class\Class2.cs" />
     <Compile Remove="Generators\class\Classof2021.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Generators\class\Class1.csx" />
     <None Remove="Generators\class\Class1.js" />
   </ItemGroup>
 

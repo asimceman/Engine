@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
+using System.ComponentModel;
 
-
-public class Classof2021
-{
-    public static void Main()
-    {
-        Console.WriteLine("Test best");
-    }
-}
-
+Process process = new Process();
+process.StartInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+process.StartInfo.Arguments = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" + " --new-window";
+process.Start();

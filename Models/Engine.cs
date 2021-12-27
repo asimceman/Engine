@@ -20,8 +20,17 @@ using System.Runtime.Loader;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 
+
+
+public class Parameters
+{
+    public dynamic Model;
+}
+
 namespace SchematicsProject
 {
+    
+
 
     public class Engine
     {
@@ -85,7 +94,7 @@ namespace SchematicsProject
             {
                 
 
-                if (!TemplateFile.EndsWith(".cs"))
+                if (!TemplateFile.EndsWith(".csx"))
                 {
                     continue;
                 }
@@ -99,43 +108,32 @@ namespace SchematicsProject
 
                 string code = File.ReadAllText(TemplateFile);
 
-                // Get a SyntaxTree
-                /*var tree = SyntaxFactory.ParseSyntaxTree(code);
-
-                //Console.WriteLine(tree);
-                PrintDiagnostics(tree);
-
-                // Create a compilation for the syntax tree
-
-
-                var fileName = templateName + ".dll";
-                var path = Path.Combine(Directory.GetCurrentDirectory(), fileName);
-                var assemblyPath = Path.GetDirectoryName(typeof(object).GetTypeInfo().Assembly.Location);
-                List<MetadataReference> references = new List<MetadataReference>();
-                references.Add(MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location));
-                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")));
-                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Console.dll")));
-
-                var compilation = CSharpCompilation.Create(templateName + ".dll")
-                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                .AddReferences(references)
-                .AddSyntaxTrees(tree);
-
-
-
                 
 
-                // Emit an Assembly that contains the result of the Roslyn code generation
-                compilation.Emit(path);
+                try
+                {
 
-                // Use reflection to load and execute code
-                var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                    var props = new Parameters { Model = Model };
 
+                    ScriptOptions scriptOptions = ScriptOptions.Default;
 
-                asm.GetType(templateName).GetMethod("Main").Invoke(null, new object[] { "model" });*/
+                    var mscorlib = typeof(System.Object).Assembly;
+                    var systemCore = typeof(System.Linq.Enumerable).Assembly;
+                    var systemDictionary = typeof(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo).Assembly;
+                    scriptOptions = scriptOptions.AddReferences(mscorlib, systemCore, systemDictionary);
+                    
 
-                var result = await CSharpScript.RunAsync(code, ScriptOptions.Default.WithImports("System.Math"));
-                Console.WriteLine(result.ReturnValue);
+                    var result = await CSharpScript.RunAsync(code, globals: props, options:scriptOptions);
+
+                    Console.WriteLine(result.ReturnValue);
+
+                }
+                catch (CompilationErrorException e)
+                {
+                    Console.WriteLine(string.Join(Environment.NewLine, e.Diagnostics));
+                }
+
+                
             }
 
         }
