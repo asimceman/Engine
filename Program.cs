@@ -29,7 +29,7 @@ namespace SchematicsProject
             var engine = new Engine();
             try
             {
-                await engine.InputProcces(input2);
+                await engine.InputProcces(args);
             }
             catch (ArgumentException e)
             {
